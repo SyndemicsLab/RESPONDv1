@@ -1,0 +1,28 @@
+### separating outputs for each block and writing to .csv files inside "outputs" folder
+
+write_outputs_per_block <- function() {
+  num_comp_per_block <- jmax*kmax*lmax
+  n.rows <- simulation_duration+1;  # each row represents one simulation cycle. There is an additional row for cycle 0 (initial status)
+  for (i in 1:imax)
+  {
+    general_output_name <- paste("outputs/counts_block",i-1,".csv", sep='')
+    mortality_output_name <- paste("outputs/mortality_block",i-1,".csv", sep='')
+
+    first_column <- num_comp_per_block*(i-1)+1
+    last_column <- first_column + num_comp_per_block -1
+    # printing general counts per block
+    write.csv(out$`general outputs`[1:n.rows,first_column:last_column],file=general_output_name, row.names = c(0:(n.rows-1)), quote = FALSE)
+    # printing mortality outputs per block
+    write.csv(out$`mortality outputs`[1:n.rows,first_column:last_column],file=mortality_output_name, row.names = c(0:(n.rows-1)), quote = FALSE)
+  }
+  
+  num_comp_per_block <- jmax*kmax*lmax/2
+  for (i in 1:imax)
+  {
+    overdose_output_name <- paste("outputs/overdose_block",i-1,".csv", sep='')
+    first_column <- num_comp_per_block*(i-1)+1
+    last_column <- first_column + num_comp_per_block -1
+    # printing overdose outputs per block
+    write.csv(out$`overdose outputs`[1:n.rows,first_column:last_column],file=overdose_output_name, row.names = c(0:(n.rows-1)), quote = FALSE)
+  }
+}
