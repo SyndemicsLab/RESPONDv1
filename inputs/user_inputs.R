@@ -14,12 +14,12 @@ block <<- c("no_trt","detox","res","mmt","bup","ntx","cor",
 
 # age brackets, always from youngest to oldest
 agegrp <<- c("10_14","15_19","20_24","25_29","30_34","35_39","40_44","45_49","50_54","55_59","60_64","65_69",
-         "70_74","75_79","80_84","85_89","90_94","95_99")
+            "70_74","75_79","80_84","85_89","90_94","95_99")
 
 #gender groups
 sex <<- c("m","f")
 
-# OUD states: active states always come first. Then add non_active states in the same order as active ones. 
+# OUD states: active states always come first. Then add non_active states in the same order as active ones.
 oud <<- c("active_noninj","active_inj","nonactive_noninj","nonactive_inj")
 
 # the inputs can be directly passed to simulation (useful for calibration or large runs) or be saved as .csv on hard drive for further reference.
@@ -46,14 +46,13 @@ save_general_outputs <<- "yes"      # "yes" or "no"
 general_stats_cycles <<- c(0)
 
 # Duration of simulation in cycles
-simulation_duration <<- 5
+simulation_duration <<- 40
 
 # Aging parameters
-aging_prob <<- 1.0/(52*5);        # aging prob = 1/number of cycles in each age bracket. With weekly cycle and 5-year age bracket: 52*5
-death_at_100yo <<- c(0.007,0.001)    # proportion of last age bracket who reach to 100 yo and automatically die. 1st element represents gender0 (male), 2nd element represents gender1 (female)
+cycles_in_age_brackets <<- 5       # number of cycles in each age bracket. With weekly cycle and 5-year age bracket: 52*5
 
 # entering cohort parameters
-time_varying_entering_cohort_cycles <<- c(5,4,12)    # each element should have its own row for entering cohort values. Each row represents a time interval, from last row's cycle to current row's cycle. Only the upper limit is inclusive
+time_varying_entering_cohort_cycles <<- c(5,7,120)    # each element should have its own row for entering cohort values. Each row represents a time interval, from last row's cycle to current row's cycle. Only the upper limit is inclusive
 # overdose parameters
 # all types overdose and fatal to all types overdose ratios are considered to have the same time_varying intervals
-time_varying_overdose_cycles <<- c(5,6,12)    # each element should have its own column(for all types) or row (for fatal). Each of them represents a time interval, from last cycle to current cycle. Only the upper limit is inclusive
+time_varying_overdose_cycles <<- c(5,7,120)    # each element should have its own column(for all types) or row (for fatal). Each of them represents a time interval, from last cycle to current cycle. Only the upper limit is inclusive
