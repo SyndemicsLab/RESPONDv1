@@ -84,14 +84,14 @@ out<<- sim (
      mort_vec,
      imax,jmax, kmax,lmax,
      simulation_duration,
-     aging_prob, death_at_100yo)
+     cycles_in_age_brackets)
 
 if (save_general_outputs == "yes")
 {
   write.table(out$`general outputs`, file = paste("outputs/general_outputs",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = general_IDs)
   write.table(out$`overdose outputs`, file = paste("outputs/overdose_outputs",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = active_oud_IDs)
   write.table(out$`mortality outputs`, file = paste("outputs/mortality_outputs",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = general_IDs)
-  write.table(matrix(out$`admission to detox`,nrow=1), file = paste("outputs/admission_to_detox",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = as.character(seq(0,simulation_duration,1)))
+  write.table(out$`admission to trts`, file = paste("outputs/admission_to_trts",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = block_idx[2:ceiling(imax/2)])
 }
 
 if (write_per_trt_output == "yes")
