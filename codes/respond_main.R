@@ -77,7 +77,7 @@ if (length(warnings()) != 0)
 # "out" can be used to analyze the outputs and plot graphs.
 out<<- sim (
      init_demographics_vec,
-     entering_cohort_matrix,
+     entering_cohort_matrix, time_varying_entering_cohort_cycles,
      oud_trans_matrix,
      block_trans_matrix, block_init_effect_matrix, detox_block_id,
      all_types_overdose_matrix, fatal_overdose_matrix,
@@ -89,9 +89,12 @@ out<<- sim (
 if (save_general_outputs == "yes")
 {
   write.table(out$`general outputs`, file = paste("outputs/general_outputs",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = general_IDs)
-  write.table(out$`overdose outputs`, file = paste("outputs/overdose_outputs",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = active_oud_IDs)
-  write.table(out$`mortality outputs`, file = paste("outputs/mortality_outputs",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = general_IDs)
-  write.table(out$`admission to trts`, file = paste("outputs/admission_to_trts",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = block_idx[2:ceiling(imax/2)])
+  write.table(out$`overdose outputs`, file = paste("outputs/all_types_overdose",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = active_oud_IDs)
+  write.table(out$`mortality outputs`, file = paste("outputs/background_mortality",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = general_IDs)
+  if (imax > 1)
+  {
+    write.table(out$`admission to trts`, file = paste("outputs/admission_to_trts",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = block_idx[2:ceiling(imax/2)])
+  }
 }
 
 if (write_per_trt_output == "yes")

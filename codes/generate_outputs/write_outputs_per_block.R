@@ -6,7 +6,7 @@ write_outputs_per_block <- function() {
   for (i in 1:imax)
   {
     general_output_name <- paste("outputs/counts_block",i-1,".csv", sep='')
-    mortality_output_name <- paste("outputs/mortality_block",i-1,".csv", sep='')
+    mortality_output_name <- paste("outputs/bg_mortality_block",i-1,".csv", sep='')
 
     first_column <- num_comp_per_block*(i-1)+1
     last_column <- first_column + num_comp_per_block -1
@@ -19,7 +19,7 @@ write_outputs_per_block <- function() {
   num_comp_per_block <- jmax*kmax*lmax/2
   for (i in 1:imax)
   {
-    overdose_output_name <- paste("outputs/overdose_block",i-1,".csv", sep='')
+    overdose_output_name <- paste("outputs/all_overdose_block",i-1,".csv", sep='')
     first_column <- num_comp_per_block*(i-1)+1
     last_column <- first_column + num_comp_per_block -1
     # printing overdose outputs per block

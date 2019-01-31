@@ -12,9 +12,22 @@ check_load_gen_inputs <- function(){
   {
     warning("Invalid values in entering cohort input!")
   }
-  if (isFALSE(all.equal(entering_cohort_matrix[,1],time_varying_entering_cohort_cycles,check.attributes = FALSE)))
+  status <- TRUE
+  col_names <- colnames(entering_cohort_matrix)
+  for (i in 1:length(col_names))
+  {
+    if (length(grep(paste("c",time_varying_entering_cohort_cycles[i], sep = ""),col_names)) == 0)
+    {
+      status <- FALSE
+    }
+  }
+  if (status == FALSE)
   {
     warning("Entering cohort cycles in .csv file should be the same as cycles in user_inputs.R")
+  }
+  if (ncol(entering_cohort_matrix) != length(time_varying_entering_cohort_cycles) || nrow(entering_cohort_matrix) != (length(agegrp)*length(sex)))
+  {
+    warning("Invalid number of entering cohort values")
   }
   # ------------------------------------------------------------------------------------------------------------------
   # checking oud trans matrix

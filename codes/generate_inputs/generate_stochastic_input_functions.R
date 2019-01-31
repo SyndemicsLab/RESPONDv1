@@ -2,7 +2,7 @@
 
 # Entering cohort
 generate_entering_cohort_size <- function(){
-  entering_cohort_size <- round(runif(length(time_varying_entering_cohort_cycles),500,1000),digits = 0)
+  entering_cohort_size <- matrix(round(runif(length(agegrp)*length(sex)*length(time_varying_entering_cohort_cycles),100,1000),digits = 0), ncol = length(time_varying_entering_cohort_cycles))
   return(entering_cohort_size)
 }
 # SMR

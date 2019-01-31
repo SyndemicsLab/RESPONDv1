@@ -14,7 +14,7 @@ using namespace std;
 // [[Rcpp::export]]
 List sim (
  const NumericVector init_demographics_vec,
- const NumericMatrix entering_cohort_matrix,
+ const NumericMatrix entering_cohort_matrix, const NumericVector entering_cohort_cycles,
  const NumericMatrix OUD_trans_matrix,
  const NumericMatrix block_trans_matrix, const NumericMatrix block_init_eff_matrix, const int detox_id,
  const NumericMatrix overdose_matrix, const NumericMatrix fatal_overdose_matrix,
@@ -88,31 +88,21 @@ List sim (
       }
       // ----------------------------------------------------------------------------------------
       // Entering cohort
-      double entering_cohort_size = 0;
-      double no_trt_size = 0;
-      bool cycle_status = false;
+      int cycle_idx = -1;
 
-      for (int i=0; i < entering_cohort_matrix.nrow(); ++i)     // getting entering cohort size based on the cycle
+      for (int i=0; i < entering_cohort_cycles.size(); ++i)     // getting entering cohort size based on the cycle
       {
-        if (cycle_status == false and cycle <= entering_cohort_matrix(i,0))
-        {
-          entering_cohort_size = entering_cohort_matrix(i,1);
-          cycle_status = true;
-        }
+        if (cycle_idx == -1 and cycle <= entering_cohort_cycles[i])
+          cycle_idx = i;
       }
-      if (entering_cohort_size != 0)
-      {
-        for (int j=0; j < jmax; ++j)            // calculating size of no-treatment episode. Entering cohort is similar to current no_treatment block.
-          for (int k=0; k < kmax; ++k)
-            for (int l=0; l < lmax; ++l)
-              no_trt_size += cohort[cycle][0][j][k][l]; // only for trt=0 (no_trt)
   
-        for (int j=0; j < jmax; ++j)            // add the entering cohort to each compartment
-          for (int k=0; k < kmax; ++k)
-            for (int l=0; l < lmax; ++l)
-              if (no_trt_size != 0)
-                  cohort[cycle][0][j][k][l] = cohort[cycle][0][j][k][l]*(entering_cohort_size/no_trt_size + 1);
-      }
+      it = 0;
+      for (int j=0; j < jmax; ++j)            // add the entering cohort to each compartment
+        for (int k=0; k < kmax; ++k)
+        {
+            cohort[cycle][0][j][k][0] += entering_cohort_matrix(it,cycle_idx);
+            ++it;
+        }
       // ----------------------------------------------------------------------------------------
       // OUD transition
       double A[lmax][lmax];         //number of persons moving between different OUD states.
@@ -196,8 +186,8 @@ List sim (
       // -----------------------------------------------------------------------------------------------------------
       // overdose module
       it=0;                         //start from the first element of overdose vector
-      int cycle_idx=-1;
-      cycle_status=false;
+      cycle_idx=-1;
+      bool cycle_status=false;
 
       for (int i=0; i < fatal_overdose_matrix.nrow(); ++i)     // finding the time_interval based on the cycle
       {

@@ -6,12 +6,19 @@ generate_inputs <- function (){
   source("codes/generate_inputs/generate_stochastic_input_functions.R")
   
   # entering cohort
-  number_of_new_comers_in_each_cycle <- generate_entering_cohort_size()
-  entering_cohort_matrix <<- cbind(time_varying_entering_cohort_cycles,number_of_new_comers_in_each_cycle)
+  entering_cohort_matrix <<- generate_entering_cohort_size()
   if (save_input_files_as_csv == "yes")
   {
-    entering_cohort_tbl <- data.frame(time_varying_entering_cohort_cycles, number_of_new_comers_in_each_cycle)
-    colnames(entering_cohort_tbl) <- c("cycles_inclusive","number_of_new_comers_in_each_cycle")
+    factor_perm<-expand.grid(sex,agegrp)
+    colnames(factor_perm)<-c("sex","agegrp")
+    factor_perm<-factor_perm[,c("agegrp","sex")]
+    col_names <- c(paste("number_of_new_comers_c",time_varying_entering_cohort_cycles[1],sep=""))
+    for (i in 2:(length(time_varying_entering_cohort_cycles)))
+    {
+      col_names <- c(col_names,paste("number_of_new_comers_c",time_varying_entering_cohort_cycles[i],sep=""))
+    }
+    entering_cohort_tbl <- data.frame(factor_perm,entering_cohort_matrix)
+    colnames(entering_cohort_tbl) <- c("agegrp","sex",col_names)
     write.csv(entering_cohort_tbl,file=paste("inputs/entering_cohort",run_id,".csv", sep=''),row.names = FALSE,quote = FALSE)
   }
   # -----------------------------------------------------------------------------------------------------------------

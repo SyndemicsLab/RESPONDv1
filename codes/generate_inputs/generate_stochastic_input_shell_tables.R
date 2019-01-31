@@ -3,12 +3,21 @@
 generate_stochastic_input_shell_tables <- function()
 {
   # Entering cohort
-  entering_cohort_size_dist <- rep("", length(time_varying_entering_cohort_cycles))
-  entering_cohort_size_param1<- rep("", length(time_varying_entering_cohort_cycles))
-  entering_cohort_size_param2 <- rep("", length(time_varying_entering_cohort_cycles))
-  entering_cohort_tbl <- data.frame(time_varying_entering_cohort_cycles, entering_cohort_size_dist,entering_cohort_size_param1,entering_cohort_size_param2)
-  colnames(entering_cohort_tbl) <- c("cycles_inclusive","number_of_new_comers_in_each_cycle_dist","number_of_new_comers_in_each_cycle_param1","number_of_new_comers_in_each_cycle_param2")
-  write.csv(entering_cohort_tbl,file="inputs/entering_cohort.csv",row.names = FALSE,quote = FALSE)
+  factor_perm<-expand.grid(sex,agegrp) 
+  colnames(factor_perm)<-c("sex","agegrp")
+  factor_perm<-factor_perm[,c("agegrp","sex")]
+  dist <- rep("", jmax*kmax)
+  param1 <- rep("", jmax*kmax)
+  param2 <- rep("", jmax*kmax)
+  
+  for (i in 1:(length(time_varying_entering_cohort_cycles)))
+  {
+    df_tmp <- data.frame(dist,param1,param2)
+    col_names_tmp <- c(paste("number_of_new_comers_dist_c",time_varying_entering_cohort_cycles[i],sep=""),paste("number_of_new_comers_param1_c",time_varying_entering_cohort_cycles[i],sep=""),paste("number_of_new_comers_param2_c",time_varying_entering_cohort_cycles[i],sep=""))
+    colnames(df_tmp) <- col_names_tmp
+    factor_perm <- cbind(factor_perm,df_tmp)
+  }
+  write.csv(factor_perm,file="inputs/entering_cohort.csv",row.names = FALSE,quote = FALSE)
   #------------------------------------------------------------------------------------------------
   # SMR 
   factor_perm<-expand.grid(oud,sex,agegrp,block) 
