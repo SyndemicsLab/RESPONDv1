@@ -12,10 +12,19 @@ generate_deterministic_input_shell_tables <- function()
   write.csv(init_cohort,file="inputs/init_cohort.csv",row.names = FALSE,quote = FALSE)
   # -----------------------------------------------------------------------------------------------------------------
   # entering cohort
-  entering_cohort_size <- rep("", length(time_varying_entering_cohort_cycles))
-  entering_cohort_tbl <- data.frame(time_varying_entering_cohort_cycles, entering_cohort_size)
-  colnames(entering_cohort_tbl) <- c("cycles_inclusive","number_of_new_comers_in_each_cycle")
-  write.csv(entering_cohort_tbl,file="inputs/entering_cohort.csv",row.names = FALSE,quote = FALSE)
+  factor_perm <- expand.grid(sex,agegrp)
+  colnames(factor_perm)<-c("sex","agegrp")
+  factor_perm<-factor_perm[,c("agegrp","sex")]
+  counts <- rep("", jmax*kmax)
+  
+  for (i in 1:(length(time_varying_entering_cohort_cycles)))
+  {
+    df_tmp <- data.frame(counts)
+    col_names_tmp <- c(paste("number_of_new_comers_c",time_varying_entering_cohort_cycles[i],sep=""))
+    colnames(df_tmp) <- col_names_tmp
+    factor_perm <- cbind(factor_perm,df_tmp)
+  }
+  write.csv(factor_perm,file="inputs/entering_cohort.csv",row.names = FALSE,quote = FALSE)
   # -----------------------------------------------------------------------------------------------------------------
   # background mortality
   factor_perm<-expand.grid(sex,agegrp)

@@ -7,7 +7,9 @@ load_inputs <- function() {
   
   #------------------------------------------------------------------------------------------------------------
   # entering cohort inputs
-  entering_cohort_matrix <<- as.matrix(read.csv("inputs/entering_cohort.csv"))
+  
+  tmp_csv <- read.csv("inputs/entering_cohort.csv")
+  entering_cohort_matrix <<- as.matrix(tmp_csv[,3:ncol(tmp_csv)])
 
   #------------------------------------------------------------------------------------------------------------
   #OUd transition inputs
