@@ -9,14 +9,14 @@ get_general_stats_in_cycle <- function (cycles)
     # total size
     for (cycle in cycles)   
     {
-      counts[i,it] <- sum(out$`general outputs`[cycle+1,which(substring(general_IDs, 2, 3) == block_idx[i])])
+      counts[i,it] <- sum(out$general_outputs[cycle+1,which(substring(general_IDs, 2, 3) == block_idx[i])])
       it <- it+1
     }
     
     # male counts
     for (cycle in cycles)   
     {
-      counts[i,it] <- sum(out$`general outputs`[cycle+1,(which(substring(general_IDs, 2, 3) == block_idx[i] & substring(general_IDs,6,7) == sex_idx[1]))])
+      counts[i,it] <- sum(out$general_outputs[cycle+1,(which(substring(general_IDs, 2, 3) == block_idx[i] & substring(general_IDs,6,7) == sex_idx[1]))])
       it <- it+1
     }
     
@@ -25,7 +25,7 @@ get_general_stats_in_cycle <- function (cycles)
     {
       for (cycle in cycles)   
       {
-        counts[i,it] <- sum(out$`general outputs`[cycle+1,(which(substring(general_IDs, 2, 3) == block_idx[i] & substring(general_IDs,8,9) == oud_idx[l]))])
+        counts[i,it] <- sum(out$general_outputs[cycle+1,(which(substring(general_IDs, 2, 3) == block_idx[i] & substring(general_IDs,8,9) == oud_idx[l]))])
         it <- it+1
       }
     }
@@ -50,8 +50,9 @@ get_general_stats_in_cycle <- function (cycles)
         it <- it+1
       }
     }
-
-    write.table(counts, file = paste("outputs/general_stats",run_id,".csv",sep = ""),sep = ",", col.names = col_names,row.names = FALSE)
+    counts <- data.frame(counts)
+    colnames(counts) <- col_names
+    write.csv(counts, file = paste("outputs/general_stats",run_id,".csv",sep = ""),row.names = block)
     
 }
 
