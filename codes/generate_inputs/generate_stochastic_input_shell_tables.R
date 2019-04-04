@@ -13,7 +13,7 @@ generate_stochastic_input_shell_tables <- function()
   for (i in 1:(length(time_varying_entering_cohort_cycles)))
   {
     df_tmp <- data.frame(dist,param1,param2)
-    col_names_tmp <- c(paste("number_of_new_comers_dist_c",time_varying_entering_cohort_cycles[i],sep=""),paste("number_of_new_comers_param1_c",time_varying_entering_cohort_cycles[i],sep=""),paste("number_of_new_comers_param2_c",time_varying_entering_cohort_cycles[i],sep=""))
+    col_names_tmp <- c(paste("proportion_of_new_comers_dist_c",time_varying_entering_cohort_cycles[i],sep=""),paste("number_of_new_comers_param1_c",time_varying_entering_cohort_cycles[i],sep=""),paste("number_of_new_comers_param2_c",time_varying_entering_cohort_cycles[i],sep=""))
     colnames(df_tmp) <- col_names_tmp
     factor_perm <- cbind(factor_perm,df_tmp)
   }
@@ -41,20 +41,28 @@ generate_stochastic_input_shell_tables <- function()
   for (i in 1:(length(time_varying_overdose_cycles)))
   {
     df_tmp <- data.frame(dist,param1,param2)
-    col_names_tmp <- c(paste("all_types_overdose_dist_c",time_varying_overdose_cycles[i],sep=""),paste("all_types_overdose_param2_c",time_varying_overdose_cycles[i],sep=""),paste("all_types_overdose_param2_c",time_varying_overdose_cycles[i],sep=""))
+    col_names_tmp <- c(paste("all_types_overdose_dist_c",time_varying_overdose_cycles[i],sep=""),paste("all_types_overdose_param1_c",time_varying_overdose_cycles[i],sep=""),paste("all_types_overdose_param2_c",time_varying_overdose_cycles[i],sep=""))
     colnames(df_tmp) <- col_names_tmp
     factor_perm <- cbind(factor_perm,df_tmp)
   }
   write.csv(factor_perm,file="inputs/all_types_overdose.csv",row.names = FALSE,quote = FALSE)
   
   # Fatal to all_types overdose ratio, time_varying but not stratified
-  # Fatal to all_types overdose ratio, time_varying but not stratified
   fatal_overdose_ratio_dist <- rep("", length(time_varying_overdose_cycles))
   fatal_overdose_ratio_param1<- rep("", length(time_varying_overdose_cycles))
   fatal_overdose_ratio_param2 <- rep("", length(time_varying_overdose_cycles))
-  overdose_tbl <- data.frame(time_varying_overdose_cycles, fatal_overdose_ratio_dist,fatal_overdose_ratio_param1,fatal_overdose_ratio_param2)
-  colnames(overdose_tbl) <- c("cycles_inclusive","fatal_to_all_types_overdose_ratio_dist","fatal_to_all_types_overdose_ratio_param1","fatal_to_all_types_overdose_ratio_param2")
-  write.csv(overdose_tbl,file="inputs/fatal_overdose.csv",row.names = FALSE,quote = FALSE)
+  col_names_tmp <- matrix(rep("",length(time_varying_overdose_cycles)*3), nrow=1)
+  it <- 0
+  for (i in 1:(length(time_varying_overdose_cycles)))
+  {
+    it <- it+1
+    col_names_tmp[1,it] <- paste("fatal_to_all_types_overdose_ratio_dist_",time_varying_overdose_cycles[i],sep="")
+    it <- it+1
+    col_names_tmp[1,it] <- paste("fatal_to_all_types_overdose_ratio_param1_",time_varying_overdose_cycles[i],sep="")
+    it <- it+1
+    col_names_tmp[1,it] <- paste("fatal_to_all_types_overdose_ratio_param2_",time_varying_overdose_cycles[i],sep="")
+  }
+  write.table(col_names_tmp,file="inputs/fatal_overdose.csv",row.names = FALSE,quote = FALSE, col.names = FALSE, sep=",")
   #------------------------------------------------------------------------------------------------------------------
   # OUD transition
   factor_perm<-expand.grid(oud,sex,agegrp,block, stringsAsFactors = FALSE) 
@@ -75,8 +83,8 @@ generate_stochastic_input_shell_tables <- function()
   # --------------------------------------------------------------------------------------------------------------------
   # Block transition
   factor_perm<-expand.grid(block,oud,sex,agegrp) 
-  colnames(factor_perm)<-c("initial_trt","oud","sex","agegrp")
-  factor_perm<-factor_perm[,c("agegrp","sex","oud","initial_trt")]
+  colnames(factor_perm)<-c("initial_block","oud","sex","agegrp")
+  factor_perm<-factor_perm[,c("agegrp","sex","oud","initial_block")]
   
   for (i in 1: (ceiling(imax/2)))
   {
@@ -104,3 +112,5 @@ generate_stochastic_input_shell_tables <- function()
   }
   write.csv(blk_init_eff_tbl,file="inputs/block_init_effect.csv",row.names = FALSE,quote = FALSE)
 }
+# ------------------------------------------------------------------------------------------------------------------
+  

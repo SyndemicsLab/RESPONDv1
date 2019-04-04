@@ -12,18 +12,12 @@ if("Rcpp" %in% rownames(installed.packages()) == FALSE)
   install.packages("Rcpp",repos = "http://cran.us.r-project.org")
 } else {
   library(Rcpp)
-  }
+}
 
 # load general user inputs
 source("inputs/user_inputs.R")
 
-# Set the seed if user has chosen an acceptable one.
-if (seed != -1)
-{
-  set.seed(seed) 
-}
-
-if (run_id_type == "external")
+if (run_type == "analysis" || run_type == "calibration")
 {
   if ("getopt" %in% rownames(installed.packages()) == FALSE)
   {
@@ -33,6 +27,11 @@ if (run_id_type == "external")
   }
   args <- commandArgs(trailingOnly=TRUE)
   run_id <- as.numeric(args[1])
+  # Set the seed if user has chosen an acceptable one.
+  if (seed == "fixed")
+  {
+    set.seed(run_id) 
+  }
 }
 
 # open a file to sink the errors
@@ -56,8 +55,6 @@ if (input_type == "deterministic")
   load_inputs()
 } else {
   source("codes/generate_inputs/generate_inputs.R")
-  source("codes/generate_inputs/tmp/simulate_deterministic_user_inputs.R")  #temporary, to be removed in the final version
-  simulate_deterministic_user_inputs()  #temporary, to be removed in the final version
   generate_inputs()
 }
 
@@ -79,28 +76,43 @@ out<<- sim (
      init_demographics_vec,
      entering_cohort_matrix, time_varying_entering_cohort_cycles,
      oud_trans_matrix,
-     block_trans_matrix, block_init_effect_matrix, detox_block_id,
-     all_types_overdose_matrix, fatal_overdose_matrix,
+     block_trans_matrix, block_init_effect_matrix,
+     time_varying_overdose_cycles, all_types_overdose_matrix, fatal_overdose_vec,
      mort_vec,
      imax,jmax, kmax,lmax,
      simulation_duration,
-     cycles_in_age_brackets)
+     cycles_in_age_brackets, periods,
+     healthcare_utilization_cost, treatment_utilization_cost, pharmaceutical_cost,overdose_cost,discounting_rate)
 
-if (save_general_outputs == "yes")
+# -------------------------------------------------------------------------------------------------------------------
+# Print desired outputs based on user flags
+if (print_general_outputs == "yes")
 {
-  write.table(out$`general outputs`, file = paste("outputs/general_outputs",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = general_IDs)
-  write.table(out$`overdose outputs`, file = paste("outputs/all_types_overdose",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = active_oud_IDs)
-  write.table(out$`mortality outputs`, file = paste("outputs/background_mortality",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = general_IDs)
+  write.table(out$general_outputs, file = paste("outputs/general_outputs",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = general_IDs)
+  write.table(out$overdose_outputs, file = paste("outputs/all_types_overdose",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = active_oud_IDs)
+  write.table(out$mortality_outputs, file = paste("outputs/background_mortality",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = general_IDs)
   if (imax > 1)
   {
-    write.table(out$`admission to trts`, file = paste("outputs/admission_to_trts",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = block_idx[2:ceiling(imax/2)])
+    write.table(out$admission_to_trts, file = paste("outputs/admission_to_trts",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = block_idx[2:ceiling(imax/2)])
   }
 }
 
-if (write_per_trt_output == "yes")
+if (cost_analysis == "yes")
 {
-  source("codes/generate_outputs/write_outputs_per_block.R")
-  write_outputs_per_block()
+  source("codes/generate_outputs/print_costs.R")
+  print_costs()
+}
+
+if (run_type == "calibration")
+{
+  source("codes/generate_outputs/print_calibration_targets.R")
+  print_calibration_targets()
+}
+
+if (print_per_trt_output == "yes")
+{
+  source("codes/generate_outputs/print_outputs_per_block.R")
+  print_outputs_per_block()
 }
 
 if (length(general_stats_cycles) != 0)
