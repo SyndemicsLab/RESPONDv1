@@ -28,10 +28,15 @@ if (run_type == "analysis" || run_type == "calibration")
   args <- commandArgs(trailingOnly=TRUE)
   run_id <- as.numeric(args[1])
   # Set the seed if user has chosen an acceptable one.
-  if (seed == "fixed")
+  if (seed_type == "fixed")
   {
     set.seed(run_id) 
   }
+}
+
+if (run_type=="manual" & input_type=="stochastic" & seed_type=="fixed")
+{
+  set.seed((seed))
 }
 
 # open a file to sink the errors
