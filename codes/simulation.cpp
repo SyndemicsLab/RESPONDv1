@@ -24,7 +24,7 @@ List sim (
  const int duration, const int cycles_in_age_brackets, const int periods,
  const NumericMatrix health_util_cost_matrix, const NumericMatrix trt_util_cost_matrix, const NumericMatrix med_cost_matrix, 
  const NumericMatrix od_cost_matrix,
- double discouting_rate)
+ const double discouting_rate)
   {
     // ------------------------------------------------------------------------------------------------------------
     // initialization
@@ -89,7 +89,7 @@ List sim (
         }         
    
     // calculating aging cycles
-    NumericVector aging_cycles(1+floor(duration-floor(cycles_in_age_brackets/2+1))/cycles_in_age_brackets);
+    NumericVector aging_cycles(1+floor((duration-floor(cycles_in_age_brackets/2+1))/cycles_in_age_brackets));
     for (int c=0; c < aging_cycles.size(); ++c)
     {
       aging_cycles[c] = floor((2*c+1)*cycles_in_age_brackets/2+1);
@@ -280,7 +280,7 @@ List sim (
       it=0;                         //start from the first element of overdose vector
       cycle_idx=-1;
       
-      for (int i=0; i < overdose_cycles.size(); ++i)     // getting entering cohort size based on the cycle
+      for (int i=0; i < overdose_cycles.size(); ++i)     // getting overdose values based on the cycle
       {
         if (cycle_idx == -1 and cycle <= overdose_cycles[i])
           cycle_idx = i;

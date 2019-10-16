@@ -7,7 +7,7 @@
 #               seed_type = "random" uses R to generate random seed. In this case, the results won't be reproducible
 #               seed_type = "fixed" assigns run_id to the seed value to get reproducible runs
 # analysis:     Model is called from an external source (terminal), so run_id will be set by the external call to the main file
-#               Use for final analysis that usually require large number of runs
+#               Use for final analysis that usually requires large number of runs
 #               input_type should be "stochastic"
 #               seed_type = "random" use R to generate random seed. In this case, the results won't be reproducible
 #               seed_type = "fixed" assigns run_id to the seed value to get reproducible runs
@@ -63,7 +63,7 @@ entering_cohort_total_size <<- c(1000,2000,3000)      # total size of entering c
 # all types overdose and fatal to all types overdose ratios are considered to have the same time_varying intervals
 time_varying_overdose_cycles <<- c(52,104,156)    # each element should have its own column(for all types) or row (for fatal). Each of them represents a time interval, from last cycle to current cycle. Only the upper limit is inclusive
 
-# Inidicate whether you want to inlcude cost analysis here
+# Inidicate whether you want to include cost analysis here
 cost_analysis <<- "no"   # enter "no" for calibration mode
 cost_perspectives <<- c("healthcare_system","societal","policy_makers")  # cost perspectives to be included in cost analysis
 
@@ -77,7 +77,7 @@ discounting_rate <<- 0.0025
 periods <<- 52
 
 # For debugging purpose, if you need to reformat the output of the simulation to 1 file per block output, use the following flag
-print_per_trt_output <<- "no"      # "yes" or "no"
+print_per_blk_output <<- "no"      # "yes" or "no"
 
 # Save general outputs (all compartments' sizes in each cycle), all types overdose, background mortality and admissions to treatment episodes as csv files
 print_general_outputs <<- "yes"      # "yes" or "no"

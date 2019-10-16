@@ -13,7 +13,7 @@ check_load_gen_inputs <- function(){
     warning("Invalid values in entering cohort input!")
   }
 
-  if (ncol(entering_cohort_matrix) != length(time_varying_entering_cohort_cycles) | nrow(entering_cohort_matrix) != (length(agegrp)*length(sex)))
+  if ((ncol(entering_cohort_matrix) != length(time_varying_entering_cohort_cycles)) | (nrow(entering_cohort_matrix) != (length(agegrp)*length(sex))) )
   {
     warning("Invalid number of entering cohort values")
   }
@@ -78,14 +78,14 @@ check_load_gen_inputs <- function(){
   }
   # ------------------------------------------------------------------------------------------------------------------
   # Checking healcare system cost
-  # healthcare utilization
+  # healthcare utilization and overdose cost
   if (cost_analysis == "yes")
   {
     if (anyNA(healthcare_utilization_cost))
     {
       warning("Invalid values in healthcare utilization cost inputs!")
     } 
-    if (nrow(healthcare_utilization_cost) != (total_num_compartments/imax) & (ncol(healthcare_utilization_cost) != (length(cost_perspectives))))
+    if (nrow(healthcare_utilization_cost) != (total_num_compartments/imax) | (ncol(healthcare_utilization_cost) != (length(cost_perspectives))))
     {
       warning("Invalid number of healthcare utilization costs")
     }
@@ -93,7 +93,7 @@ check_load_gen_inputs <- function(){
     {
       warning("Invalid values in overdose cost inputs!")
     } 
-    if (nrow(overdose_cost) != 2 & (ncol(overdose_cost) != (length(cost_perspectives))))
+    if (nrow(overdose_cost) != 2 | (ncol(overdose_cost) != (length(cost_perspectives))))
     {
       warning("Invalid number of overdose costs")
     }
@@ -113,11 +113,11 @@ check_load_gen_inputs <- function(){
         warning("Invalid values in treatment utilization or pharmaceutical cost!")
       }
       
-      if (nrow(treatment_utilization_cost) != num_trts & (ncol(treatment_utilization_cost) != (length(cost_perspectives))))
+      if (nrow(treatment_utilization_cost) != num_trts | (ncol(treatment_utilization_cost) != (length(cost_perspectives))))
       {
         warning("Invalid number of treatment utilization costs")
       }
-      if (nrow(pharmaceutical_cost) != num_trts & (ncol(pharmaceutical_cost) != (length(cost_perspectives))))
+      if (nrow(pharmaceutical_cost) != num_trts | (ncol(pharmaceutical_cost) != (length(cost_perspectives))))
       {
         warning("Invalid number of pharmaceutical costs")
       }

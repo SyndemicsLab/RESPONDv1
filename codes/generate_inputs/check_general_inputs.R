@@ -16,7 +16,7 @@ check_general_inputs <- function() {
   {
     for (i in 2:(num_trts+1))
     {
-      if (block[i+num_trts] != paste("post",block[i],sep = "_"))
+      if (tolower(block[i+num_trts]) != paste("post",block[i],sep = "_"))
       {
         tmp <- tmp+1
       }
@@ -26,7 +26,7 @@ check_general_inputs <- function() {
     warning("unacceptable blocks")
 
   if (length(unique(agegrp)) != length(agegrp))
-    stop("unacceptable age brackets")
+    warning("unacceptable age brackets")
 
   if (((length(oud)%%2) != 0) | (length(unique(oud)) != length(oud)))
     warning("unacceptable oud states")

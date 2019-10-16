@@ -114,7 +114,7 @@ if (run_type == "calibration")
   print_calibration_targets()
 }
 
-if (print_per_trt_output == "yes")
+if (print_per_blk_output == "yes")
 {
   source("codes/generate_outputs/print_outputs_per_block.R")
   print_outputs_per_block()
