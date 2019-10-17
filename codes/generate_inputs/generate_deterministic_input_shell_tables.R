@@ -87,16 +87,20 @@ generate_deterministic_input_shell_tables <- function()
   colnames(factor_perm)<-c("initial_block","oud","sex","agegrp")
   factor_perm<-factor_perm[,c("agegrp","sex","oud","initial_block")]
   
-  for (i in 1: (ceiling(imax/2)))
+  for (ii in 1:length(time_varying_blk_trans_cycles))
   {
+    for (i in 1: (ceiling(imax/2)))
+    {
+      df_tmp <- data.frame(values)
+      col_names<-c(paste("to_",block[i],"_c",time_varying_blk_trans_cycles[ii],sep=""))
+      colnames(df_tmp)<-col_names
+      factor_perm<-data.frame(factor_perm,df_tmp)
+    }
     df_tmp <- data.frame(values)
-    col_names<-c(paste("to_",block[i],sep=""))
-    colnames(df_tmp)<-col_names
+    colnames(df_tmp) <- c(paste("to_corresponding_post_trt_c",time_varying_blk_trans_cycles[ii],sep=""))
     factor_perm<-data.frame(factor_perm,df_tmp)
   }
-  df_tmp <- data.frame(values)
-  colnames(df_tmp) <- c("to_corresponding_post_trt")
-  factor_perm<-data.frame(factor_perm,df_tmp)
+
   write.csv(factor_perm,file="inputs/block_trans.csv",row.names = FALSE,quote = FALSE)
   
   # Block inititation effect table

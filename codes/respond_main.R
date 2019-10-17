@@ -74,14 +74,14 @@ if (length(warnings()) != 0)
 }
 
 ### calling simulation function
-# "out" is the ouptput of the simulation. Each row is a cyle (starting from cycle 0 for initial stats) and each
+# "out" is the ouptput of the simulation. Each row is a cycle (starting from cycle 0 for initial stats) and each
 # column is number of persons within each compartment. Compartments are in the increasing order based on their output IDs. 
 # "out" can be used to analyze the outputs and plot graphs.
 out<<- sim (
      init_demographics_vec,
      entering_cohort_matrix, time_varying_entering_cohort_cycles,
      oud_trans_matrix,
-     block_trans_matrix, block_init_effect_matrix,
+     time_varying_blk_trans_cycles, block_trans_matrix, block_init_effect_matrix,
      time_varying_overdose_cycles, all_types_overdose_matrix, fatal_overdose_vec,
      mort_vec,
      imax,jmax, kmax,lmax,

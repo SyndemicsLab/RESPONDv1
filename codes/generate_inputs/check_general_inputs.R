@@ -16,7 +16,7 @@ check_general_inputs <- function() {
   {
     for (i in 2:(num_trts+1))
     {
-      if (tolower(block[i+num_trts]) != paste("post",block[i],sep = "_"))
+      if (tolower(block[i+num_trts]) != tolower(paste("post",block[i],sep = "_")))
       {
         tmp <- tmp+1
       }

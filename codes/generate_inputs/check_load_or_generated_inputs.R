@@ -33,14 +33,18 @@ check_load_gen_inputs <- function(){
   }
   # ------------------------------------------------------------------------------------------------------------------
   # checking block transtion matrix
-  if (dim(block_trans_matrix)[1] != total_num_compartments | dim(block_trans_matrix)[2] != (ceiling(imax/2)+1))
+  if (dim(block_trans_matrix)[1] != total_num_compartments | dim(block_trans_matrix)[2] != (length(time_varying_blk_trans_cycles)*(ceiling(imax/2)+1)))
   {
     warning("Invalid number of block transition values")
   }
-  if (length(which(round(rowSums(block_trans_matrix), digits=12) != 1)) != 0)
+  for (i in 0:(length(time_varying_blk_trans_cycles)-1))
   {
-    warning("Block transition values do not add to 1.")
+    if (length(which(round(rowSums(block_trans_matrix[,(i*(num_trts+2)+1):((i+1)*(num_trts+2))]), digits=12) != 1)) != 0)
+    {
+      warning("Block transition values do not add to 1.")
+    }
   }
+
   if (anyNA(block_init_effect_matrix))
   {
     warning("Invalid values in block initiation effect input!")

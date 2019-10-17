@@ -17,7 +17,7 @@ List sim (
  const NumericVector init_demographics_vec,
  const NumericMatrix entering_cohort_matrix, const NumericVector entering_cohort_cycles,
  const NumericMatrix OUD_trans_matrix,
- const NumericMatrix block_trans_matrix, const NumericMatrix block_init_eff_matrix,
+ const NumericVector block_trans_cycles, NumericMatrix block_trans_matrix_all, const NumericMatrix block_init_eff_matrix,
  const NumericVector overdose_cycles, const NumericMatrix overdose_matrix,const NumericVector fatal_overdose_vec,
  const NumericVector mort_vec,
  const int imax,const int jmax, const int kmax, const int lmax,
@@ -35,6 +35,9 @@ List sim (
     double overdose[duration+1][imax][jmax][kmax][num_active_oud];
     double mortality[duration+1][imax][jmax][kmax][lmax];
     NumericMatrix num_admission_trts(duration+1,num_trts);  // number of admissions to actual treatment episodes, excluding no_trt and post_trts
+    //block transition matrix for each time-varying interval. It is initialized by 1st interval values.
+    NumericMatrix block_trans_matrix = block_trans_matrix_all(Range(0,block_trans_matrix_all.nrow()-1),Range(0,num_trts+2-1));
+    int blk_trans_cycle_idx = 0;
     // initializing cost vectors/matrices
     double health_util_cost[duration/periods][imax][cost_perspectives];
     double od_cost[duration/periods][imax][cost_perspectives];
@@ -169,8 +172,21 @@ List sim (
       // -----------------------------------------------------------------------------------------------------------
       // Block transition
       // In this part, in order to make it easier to understand, <=  criteria is used for block loops.
+
+      cycle_idx = -1;
+      for (int i=0; i < block_trans_cycles.size(); ++i)  // find the time-varying interval
+      {
+        if (cycle_idx == -1 and cycle <= block_trans_cycles[i])
+          cycle_idx = i;
+      }
+      if (blk_trans_cycle_idx != cycle_idx)   // update only if the interval has changed
+      {
+        blk_trans_cycle_idx = cycle_idx;
+        block_trans_matrix = block_trans_matrix_all(Range(0,block_trans_matrix_all.nrow()-1),Range(blk_trans_cycle_idx*(num_trts+2),(blk_trans_cycle_idx+1)*(num_trts+2)-1));
+      }
+      
       double B[imax][num_trts+2];         // 1 for no_trt and 1 for corresponding_post_trt
-      double trt_init_effected_grp[num_active_oud][imax];  //groups that blcok initiation would change their OUD status
+      double trt_init_effected_grp[num_active_oud][imax];  //groups that block initiation would change their OUD status
       it=0;                                 // reset the iterator
       for (int j=0; j < jmax; ++j)
         for (int k=0; k < kmax; ++k)
