@@ -13,6 +13,12 @@ if("Rcpp" %in% rownames(installed.packages()) == FALSE)
 } else {
   library(Rcpp)
 }
+if("bit64" %in% rownames(installed.packages()) == FALSE) 
+{
+  install.packages("Rcpp",repos = "http://cran.us.r-project.org")
+} else {
+  library(bit64)
+}
 
 # load general user inputs
 source("inputs/user_inputs.R")

@@ -20,7 +20,7 @@ generate_deterministic_input_shell_tables <- function()
   for (i in 1:(length(time_varying_entering_cohort_cycles)))
   {
     df_tmp <- data.frame(counts)
-    col_names_tmp <- c(paste("proportion_of_new_comers_c",time_varying_entering_cohort_cycles[i],sep=""))
+    col_names_tmp <- c(paste("proportion_of_new_comers_cycle",time_varying_entering_cohort_cycles[i],sep=""))
     colnames(df_tmp) <- col_names_tmp
     factor_perm <- cbind(factor_perm,df_tmp)
   }
@@ -53,7 +53,7 @@ generate_deterministic_input_shell_tables <- function()
   for (i in 1:(length(time_varying_overdose_cycles)))
   {
     df_tmp <- data.frame(all_types_overdose)
-    col_names_tmp <- c(paste("all_types_overdose_c",time_varying_overdose_cycles[i],sep=""))
+    col_names_tmp <- c(paste("all_types_overdose_cycle",time_varying_overdose_cycles[i],sep=""))
     colnames(df_tmp) <- col_names_tmp
     factor_perm <- cbind(factor_perm,df_tmp)
   }
@@ -62,7 +62,7 @@ generate_deterministic_input_shell_tables <- function()
   col_names_tmp <- matrix(rep("",length(time_varying_overdose_cycles)), nrow=1)
   for (i in 1:(length(col_names_tmp)))
   {
-    col_names_tmp[i] <- paste("fatal_to_all_types_overdose_ratio_c",time_varying_overdose_cycles[i],sep="")
+    col_names_tmp[i] <- paste("fatal_to_all_types_overdose_ratio_cycle",time_varying_overdose_cycles[i],sep="")
   }
   write.table(col_names_tmp,file="inputs/fatal_overdose.csv",row.names = FALSE,quote = FALSE, col.names = FALSE, sep=",")
   #------------------------------------------------------------------------------------------------------------------
@@ -92,13 +92,13 @@ generate_deterministic_input_shell_tables <- function()
     for (i in 1: (ceiling(imax/2)))
     {
       df_tmp <- data.frame(values)
-      col_names<-c(paste("to_",block[i],"_c",time_varying_blk_trans_cycles[ii],sep=""))
+      col_names<-c(paste("to_",block[i],"_cycle",time_varying_blk_trans_cycles[ii],sep=""))
       colnames(df_tmp)<-col_names
-      factor_perm<-data.frame(factor_perm,df_tmp)
+      factor_perm<-cbind(factor_perm,df_tmp)
     }
     df_tmp <- data.frame(values)
-    colnames(df_tmp) <- c(paste("to_corresponding_post_trt_c",time_varying_blk_trans_cycles[ii],sep=""))
-    factor_perm<-data.frame(factor_perm,df_tmp)
+    colnames(df_tmp) <- c(paste("to_corresponding_post_trt_cycle",time_varying_blk_trans_cycles[ii],sep=""))
+    factor_perm<-cbind(factor_perm,df_tmp)
   }
 
   write.csv(factor_perm,file="inputs/block_trans.csv",row.names = FALSE,quote = FALSE)

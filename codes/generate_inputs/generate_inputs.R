@@ -43,6 +43,10 @@ generate_inputs <- function (){
   {
     warning("Invalid number of background mortality values")
   }
+  if (range(bg_mort)[1] < 0 | range(bg_mort)[2] >= 1)
+  {
+    warning("Background mortality values should be between 0 and 1(exclusive).")
+  }
   bg_mort <- rep(rep(bg_mort,each= lmax),imax)
   SMR <- generate_SMR()
   mort_vec <<- 1-exp(log(1-bg_mort)*SMR)

@@ -2,7 +2,7 @@
 check_load_gen_inputs <- function(){
   
   #checking initial cohort vector
-  if (anyNA(init_demographics_vec) | (length(init_demographics_vec) != (ceiling(imax/2)*jmax*kmax*lmax)))
+  if (anyNA(init_demographics_vec) | ((length(init_demographics_vec) != (ceiling(imax/2)*jmax*kmax*lmax))))
   {
     warning("Invalid values in initial cohort input!")
   }
@@ -27,19 +27,19 @@ check_load_gen_inputs <- function(){
   {
     warning("Invalid number of OUD transition values")
   }
-  if (length(which(round(rowSums(oud_trans_matrix), digits=12) != 1)) != 0)
+  if (length(which(round(rowSums(oud_trans_matrix), digits=6) != 1)) != 0)
   {
     warning("OUD transition values do not add to 1.")
   }
   # ------------------------------------------------------------------------------------------------------------------
   # checking block transtion matrix
-  if (dim(block_trans_matrix)[1] != total_num_compartments | dim(block_trans_matrix)[2] != (length(time_varying_blk_trans_cycles)*(ceiling(imax/2)+1)))
+  if ((dim(block_trans_matrix)[1] != total_num_compartments) | (dim(block_trans_matrix)[2] != (length(time_varying_blk_trans_cycles)*(ceiling(imax/2)+1))))
   {
     warning("Invalid number of block transition values")
   }
   for (i in 0:(length(time_varying_blk_trans_cycles)-1))
   {
-    if (length(which(round(rowSums(block_trans_matrix[,(i*(num_trts+2)+1):((i+1)*(num_trts+2))]), digits=12) != 1)) != 0)
+    if (length(which(round(rowSums(block_trans_matrix[,(i*(num_trts+2)+1):((i+1)*(num_trts+2))]), digits=6) != 1)) != 0)
     {
       warning("Block transition values do not add to 1.")
     }
@@ -53,6 +53,10 @@ check_load_gen_inputs <- function(){
   {
     warning("Invalid number of block initiation effect values")
   }
+  if (range(block_init_effect_matrix)[1] < 0 | range(block_init_effect_matrix)[2] > 1)
+  {
+    warning("Block initiation values should be between 0 and 1.")
+  }
   # -----------------------------------------------------------------------------------------------------------------
   # checking overdose inputs
   if (anyNA(all_types_overdose_matrix))
@@ -63,13 +67,19 @@ check_load_gen_inputs <- function(){
   {
     warning("Invalid number of all types overdose values")
   }
+  if (range(all_types_overdose_matrix)[1] < 0 | range(all_types_overdose_matrix)[2] > 1)
+  {
+    warning("All type overdose values should be between 0 and 1.")
+  }
   
   if (anyNA(fatal_overdose_vec))
   {
     warning("Invalid values in fatal overdose input!")
   }
-  
-  #fatal_overdose_vec <<- as.numeric(fatal_overdose_vec)
+  if (range(fatal_overdose_vec)[1] < 0 | range(fatal_overdose_vec)[2] > 1)
+  {
+    warning("Fatal to all-type overdose values should be between 0 and 1.")
+  }
   # ------------------------------------------------------------------------------------------------------------------
   # checking mortality inputs
   if (anyNA(mort_vec))
@@ -80,7 +90,10 @@ check_load_gen_inputs <- function(){
   {
     warning("Invalid number of mortality values")
   }
-  # ------------------------------------------------------------------------------------------------------------------
+  if (range(mort_vec)[1] < 0 | range(mort_vec)[2] > 1)
+  {
+    warning("Mortality values should be between 0 and 1.")
+  }# ------------------------------------------------------------------------------------------------------------------
   # Checking healcare system cost
   # healthcare utilization and overdose cost
   if (cost_analysis == "yes")

@@ -16,7 +16,7 @@ check_general_inputs <- function() {
   {
     for (i in 2:(num_trts+1))
     {
-      if (tolower(block[i+num_trts]) != tolower(paste("post",block[i],sep = "_")))
+      if (tolower(block[i+num_trts]) != tolower(paste("post",block[i],sep = "-")))
       {
         tmp <- tmp+1
       }
@@ -62,41 +62,46 @@ check_general_inputs <- function() {
   # check entering cohort cycles
   if (time_varying_entering_cohort_cycles[length(time_varying_entering_cohort_cycles)] <  simulation_duration)
   {
-    warning("The last cycle in entering cohort table should be greater than or equal to simulation duration.")
+    warning("The last cycle in entering cohort cycles should be greater than or equal to simulation duration.")
   }
-  # status <- TRUE
-  # col_names <- colnames(read.csv("inputs/entering_cohort.csv"))
-  # for (i in 1:length(col_names))
-  # {
-  #   if (length(grep(paste("c",time_varying_entering_cohort_cycles[i], sep = ""),col_names)) == 0)
-  #   {
-  #     status <- FALSE
-  #   }
-  # }
-  # if (status == FALSE)
-  # {
-  #   warning("Entering cohort cycles in .csv file should be the same as cycles in user_inputs.R")
-  # }
+  if (length(time_varying_entering_cohort_cycles) != length(unique(time_varying_entering_cohort_cycles)))
+  {
+    warning("Time-varying entering cohort cycles should be identical.")
+  }
+  if (!is.sorted.integer64(time_varying_entering_cohort_cycles))
+  {
+    warning("Time-varying entering cohort cycles should be in increasing order")
+  }
   # ----------------------------------------------------------------------------------------------------------------
   # check overdose cycles
   if (time_varying_overdose_cycles[length(time_varying_overdose_cycles)] < simulation_duration)
   {
-    warning("The last cycle in overdose table should be greater than or equal to simulation duration.")
+    warning("The last cycle in overdose cycles should be greater than or equal to simulation duration.")
   }
-  
-  # for (i in 1:length(time_varying_overdose_cycles))
-  # {
-  #   pos1 = gregexpr('c',  colnames(all_types_overdose_matrix)[i])
-  #   pos2 = gregexpr('c',  colnames(fatal_overdose_vec)[i])
-  #   str1 <- substr(colnames(all_types_overdose_matrix)[i], pos1[[1]][1]+1, nchar(colnames(all_types_overdose_matrix)[i]))
-  #   str2 <- substr(colnames(fatal_overdose_vec)[i], pos2[[1]][1]+1, nchar(colnames(fatal_overdose_vec)[i]))   
-  #   if (!(str1 == str2 & str1 == time_varying_overdose_cycles[i]))
-  #     warning("All types and fatal overdose cycles in .csv file should be the same as cycles in user_inputs.R")
-  # }
-  # 
-
+  if (length(time_varying_overdose_cycles) != length(unique(time_varying_overdose_cycles)))
+  {
+    warning("Time-varying overdose cycles should be identical.")
+  }
+  if (!is.sorted.integer64(time_varying_overdose_cycles))
+  {
+    warning("Time-varying overdose cycles should be in increasing order")
+  }
   # -----------------------------------------------------------------------------------------------------------------
-  if (dir.exists("outputs") == FALSE)
+  # check block transition cycles
+  if (time_varying_blk_trans_cycles[length(time_varying_blk_trans_cycles)] < simulation_duration)
+  {
+    warning("The last cycle in block transition cycles should be greater than or equal to simulation duration.")
+  }
+  if (length(time_varying_blk_trans_cycles) != length(unique(time_varying_blk_trans_cycles)))
+  {
+    warning("Time-varying block transition cycles should be identical.")
+  }
+  if (!is.sorted.integer64(time_varying_blk_trans_cycles))
+  {
+    warning("Time-varying block transition cycles should be in increasing order")
+  }
+  # -----------------------------------------------------------------------------------------------------------------
+   if (dir.exists("outputs") == FALSE)
   {
     dir.create("outputs")
   }

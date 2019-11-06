@@ -13,7 +13,7 @@ generate_stochastic_input_shell_tables <- function()
   for (i in 1:(length(time_varying_entering_cohort_cycles)))
   {
     df_tmp <- data.frame(dist,param1,param2)
-    col_names_tmp <- c(paste("proportion_of_new_comers_dist_c",time_varying_entering_cohort_cycles[i],sep=""),paste("number_of_new_comers_param1_c",time_varying_entering_cohort_cycles[i],sep=""),paste("number_of_new_comers_param2_c",time_varying_entering_cohort_cycles[i],sep=""))
+    col_names_tmp <- c(paste("proportion_of_new_comers_dist#c",time_varying_entering_cohort_cycles[i],sep=""),paste("number_of_new_comers_param1_c",time_varying_entering_cohort_cycles[i],sep=""),paste("number_of_new_comers_param2_c",time_varying_entering_cohort_cycles[i],sep=""))
     colnames(df_tmp) <- col_names_tmp
     factor_perm <- cbind(factor_perm,df_tmp)
   }
@@ -41,7 +41,7 @@ generate_stochastic_input_shell_tables <- function()
   for (i in 1:(length(time_varying_overdose_cycles)))
   {
     df_tmp <- data.frame(dist,param1,param2)
-    col_names_tmp <- c(paste("all_types_overdose_dist_c",time_varying_overdose_cycles[i],sep=""),paste("all_types_overdose_param1_c",time_varying_overdose_cycles[i],sep=""),paste("all_types_overdose_param2_c",time_varying_overdose_cycles[i],sep=""))
+    col_names_tmp <- c(paste("all_types_overdose_dist#c",time_varying_overdose_cycles[i],sep=""),paste("all_types_overdose_param1#c",time_varying_overdose_cycles[i],sep=""),paste("all_types_overdose_param2#c",time_varying_overdose_cycles[i],sep=""))
     colnames(df_tmp) <- col_names_tmp
     factor_perm <- cbind(factor_perm,df_tmp)
   }
@@ -56,11 +56,11 @@ generate_stochastic_input_shell_tables <- function()
   for (i in 1:(length(time_varying_overdose_cycles)))
   {
     it <- it+1
-    col_names_tmp[1,it] <- paste("fatal_to_all_types_overdose_ratio_dist_",time_varying_overdose_cycles[i],sep="")
+    col_names_tmp[1,it] <- paste("fatal_to_all_types_overdose_ratio_dist#c",time_varying_overdose_cycles[i],sep="")
     it <- it+1
-    col_names_tmp[1,it] <- paste("fatal_to_all_types_overdose_ratio_param1_",time_varying_overdose_cycles[i],sep="")
+    col_names_tmp[1,it] <- paste("fatal_to_all_types_overdose_ratio_param1#c",time_varying_overdose_cycles[i],sep="")
     it <- it+1
-    col_names_tmp[1,it] <- paste("fatal_to_all_types_overdose_ratio_param2_",time_varying_overdose_cycles[i],sep="")
+    col_names_tmp[1,it] <- paste("fatal_to_all_types_overdose_ratio_param2#c",time_varying_overdose_cycles[i],sep="")
   }
   write.table(col_names_tmp,file="inputs/fatal_overdose.csv",row.names = FALSE,quote = FALSE, col.names = FALSE, sep=",")
   #------------------------------------------------------------------------------------------------------------------

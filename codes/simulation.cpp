@@ -97,7 +97,6 @@ List sim (
     {
       aging_cycles[c] = floor((2*c+1)*cycles_in_age_brackets/2+1);
     }
-      
     // -------------------------------------------------------------------------------------------
     for (int cycle=1; cycle < duration+1; ++cycle)
     {
@@ -259,7 +258,7 @@ List sim (
                     total_cost(ii,0) += tmp;
                     tmp2 = tmp/pow(1+discouting_rate, cycle);
                     total_cost(ii,1) += tmp2;
-                    
+                    //std::cout<<size<<", "<<health_util_cost_matrix(it2,ii)<<std::endl;
                     if (i > 0 and i < num_trts+1)
                     { // treatment utilization cost
                       tmp = size * trt_util_cost_matrix(i-1,ii);
@@ -276,16 +275,16 @@ List sim (
                     }
                   }
                   // life
-                 /* life[0] += size;
-                  life[1] += size/pow(1+discouting_rate, cycle);
+                  //life[0] += size;
+                  //life[1] += size/pow(1+discouting_rate, cycle);
                   // utility
-                  tmp = size * util_matrix(it,0);
-                  util[0][0] += tmp;
-                  util[1][0] += tmp/pow(1+discouting_rate, cycle); 
-                  tmp = size * util_matrix(it,1);
-                  util[0][1] += tmp;
-                  util[1][1] += tmp/pow(1+discouting_rate, cycle);
-                  */
+                 // tmp = size * util_matrix(it,0);
+                  //util[0][0] += tmp;
+                  //util[1][0] += tmp/pow(1+discouting_rate, cycle); 
+                  //tmp = size * util_matrix(it,1);
+                  //util[0][1] += tmp;
+                  //util[1][1] += tmp/pow(1+discouting_rate, cycle);
+                  
                   ++it;
                   ++it2;
                 }
