@@ -14,31 +14,25 @@ if("Rcpp" %in% rownames(installed.packages()) == FALSE)
   library(Rcpp)
 }
 
-# load general user inputs
-source("inputs/user_inputs.R")
-
-if (run_type == "analysis" || run_type == "calibration")
+if ("getopt" %in% rownames(installed.packages()) == FALSE)
 {
-  if ("getopt" %in% rownames(installed.packages()) == FALSE)
-  {
-    install.packages("getopt",repos = "http://cran.us.r-project.org")
-  } else {
-    library(getopt)
-  }
-  args <- commandArgs(trailingOnly=TRUE)
-  strategy_id <- as.numeric(args[1])
-  run_id <- as.numeric(args[2])
-  num_runs <- as.numeric(args[3])
-  # Set the seed if user has chosen an acceptable one.
-  if (seed_type == "fixed")
-  {
-    set.seed(run_id) 
-  }
+  install.packages("getopt",repos = "http://cran.us.r-project.org")
+} else {
+  library(getopt)
 }
+args <- commandArgs(trailingOnly=TRUE)
+strategy_id <- as.numeric(args[1])
+run_id <- as.numeric(args[2])
+num_runs <- as.numeric(args[3])
 
-if (run_type=="manual" & input_type=="stochastic" & seed_type=="fixed")
+# load general user inputs
+source(paste("input",strategy_id,"/input_file_paths.R", sep=""))
+source(paste("input",strategy_id,"/user_inputs.R", sep=""))
+
+# Set the seed if user has chosen an acceptable one.
+if (seed_type == "fixed")
 {
-  set.seed((seed))
+  set.seed(run_id) 
 }
 
 # open a file to sink the errors
@@ -51,8 +45,6 @@ source("codes/generate_inputs/check_general_inputs.R")
 check_general_inputs()
 
 # source files
-source(paste("input",strategy_id,"/input_file_paths.R", sep=""))
-
 sourceCpp("codes/simulation.cpp")
 source("codes/generate_outputs/generate_output_IDs.R")
 generate_output_IDs()

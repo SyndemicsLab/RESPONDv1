@@ -14,7 +14,7 @@
 # manual:       Model is called from Rstudio, so run_id should be set manually 
 #               Use for small number of runs with the purpose of debugging or understanding the model
 #               input_type can be either "deterministic" (no seed required) or "stochastic" (set the seed to a positive integer value if you choose fixed seed)
-run_type <<-  "manual"       # "manual" or "calibration" or "analysis"
+run_type <<-  "analysis"       # "manual" or "calibration" or "analysis"
 
 # Input type
 # deterministic:      Inputs will be read as deterministic values from saved .csv files, so there is no need for a seed
