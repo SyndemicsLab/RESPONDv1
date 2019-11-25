@@ -3,12 +3,12 @@
 load_inputs <- function() {
 
   #cohort initialization inputs
-  init_demographics_vec <<- read.csv("inputs/init_cohort.csv")$counts
+  init_demographics_vec <<- read.csv(initial_cohort_file)$counts
   
   #------------------------------------------------------------------------------------------------------------
   # entering cohort inputs
   
-  tmp_csv <- read.csv("inputs/entering_cohort.csv",comment.char="",check.names = FALSE)
+  tmp_csv <- read.csv(entering_chort_file,comment.char="",check.names = FALSE)
   tmp_csv <- as.matrix(tmp_csv[,3:ncol(tmp_csv)])
   entering_cohort_matrix <<- tmp_csv
   for (i in 1:length(entering_cohort_total_size))
@@ -33,15 +33,15 @@ load_inputs <- function() {
 
   #------------------------------------------------------------------------------------------------------------
   #OUD transition inputs
-  tmp_csv <- read.csv("inputs/oud_trans.csv")
+  tmp_csv <- read.csv(oud_trans_file)
   oud_trans_matrix <<- as.matrix(tmp_csv[,5:ncol(tmp_csv)])
 
   # # -----------------------------------------------------------------------------------------------------------
   # # Block transition inputs
-  tmp_csv <- read.csv("inputs/block_trans.csv",comment.char="",check.names = FALSE)
+  tmp_csv <- read.csv(block_trans_file,comment.char="",check.names = FALSE)
   block_trans_matrix <<- as.matrix(tmp_csv[,5:ncol(tmp_csv)])
   
-  tmp_csv <- read.csv("inputs/block_init_effect.csv")
+  tmp_csv <- read.csv(block_init_effect_file)
   block_init_effect_matrix <<- as.matrix(tmp_csv[,2:ncol(tmp_csv)])
   
   if(ncol(block_trans_matrix) != (length(time_varying_blk_trans_cycles)*(ceiling(imax/2)+1)) )
@@ -64,10 +64,10 @@ load_inputs <- function() {
   }
   # # -----------------------------------------------------------------------------------------------------------
   # # Overdose inputs
-  tmp_csv <- read.csv("inputs/all_types_overdose.csv",comment.char="",check.names = FALSE)
+  tmp_csv <- read.csv(all_type_overdose_file,comment.char="",check.names = FALSE)
   all_types_overdose_matrix <<- as.matrix(tmp_csv[,5:ncol(tmp_csv)])
 
-  fatal_overdose_vec_tmp <- read.csv("inputs/fatal_overdose.csv",comment.char="",check.names = FALSE)
+  fatal_overdose_vec_tmp <- read.csv(fatal_overdose_file,comment.char="",check.names = FALSE)
   fatal_overdose_vec <<- as.numeric(fatal_overdose_vec_tmp)
   
   if((ncol(all_types_overdose_matrix) != length(time_varying_overdose_cycles)) | (ncol(fatal_overdose_vec_tmp) != length(time_varying_overdose_cycles)))
@@ -88,7 +88,7 @@ load_inputs <- function() {
   }
   # -----------------------------------------------------------------------------------------------------------
   # background Mortality inputs
-  bg_mort <- read.csv("inputs/background_mortality.csv")$death_prob
+  bg_mort <- read.csv(background_mortality_file)$death_prob
   if (anyNA(bg_mort))
   {
     warning("Invalid values in background input!")
@@ -102,7 +102,7 @@ load_inputs <- function() {
     warning("Background mortality values should be between 0 and 1(exclusive).")
   }
   
-  SMR <- read.csv("inputs/SMR.csv")$SMR
+  SMR <- read.csv(SMR_file)$SMR
   if (anyNA(SMR))
   {
     warning("Invalid values in SMR input!")
@@ -118,10 +118,10 @@ load_inputs <- function() {
   # Costs and quality of life
   if (cost_analysis == "yes")
   {
-    tmp_csv <- read.csv("inputs/cost_life/healthcare_utilization_cost.csv")
+    tmp_csv <- read.csv(healthcare_utilization_cost_file)
     healthcare_utilization_cost <<- as.matrix(tmp_csv[,4:ncol(tmp_csv)])
     
-    tmp_csv <- read.csv("inputs/cost_life/overdose_cost.csv")
+    tmp_csv <- read.csv(overdose_cost_file)
     overdose_cost <<- as.matrix(tmp_csv[,2:ncol(tmp_csv)])
     
     #tmp_csv <- read.csv("inputs/cost_life/utility.csv")
@@ -130,10 +130,10 @@ load_inputs <- function() {
     # treatment utilization and pharmaceutical cost
     if (num_trts != 0)
     {
-      tmp_csv <- read.csv("inputs/cost_life/treatment_utilization_cost.csv")
+      tmp_csv <- read.csv(treatment_utilization_cost_file)
       treatment_utilization_cost <<- as.matrix(tmp_csv[,2:ncol(tmp_csv)])
       
-      tmp_csv <- read.csv("inputs/cost_life/pharmaceutical_cost.csv")
+      tmp_csv <- read.csv(pharmaceutical_cost_file)
       pharmaceutical_cost <<- as.matrix(tmp_csv[,2:ncol(tmp_csv)])
     }
   } 

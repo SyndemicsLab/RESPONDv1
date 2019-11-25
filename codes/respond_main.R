@@ -13,12 +13,6 @@ if("Rcpp" %in% rownames(installed.packages()) == FALSE)
 } else {
   library(Rcpp)
 }
-if("bit64" %in% rownames(installed.packages()) == FALSE) 
-{
-  install.packages("Rcpp",repos = "http://cran.us.r-project.org")
-} else {
-  library(bit64)
-}
 
 # load general user inputs
 source("inputs/user_inputs.R")
@@ -32,7 +26,9 @@ if (run_type == "analysis" || run_type == "calibration")
     library(getopt)
   }
   args <- commandArgs(trailingOnly=TRUE)
-  run_id <- as.numeric(args[1])
+  strategy_id <- as.numeric(args[1])
+  run_id <- as.numeric(args[2])
+  num_runs <- as.numeric(args[3])
   # Set the seed if user has chosen an acceptable one.
   if (seed_type == "fixed")
   {
@@ -55,6 +51,8 @@ source("codes/generate_inputs/check_general_inputs.R")
 check_general_inputs()
 
 # source files
+source(paste("input",strategy_id,"/input_file_paths.R", sep=""))
+
 sourceCpp("codes/simulation.cpp")
 source("codes/generate_outputs/generate_output_IDs.R")
 generate_output_IDs()
@@ -99,12 +97,12 @@ out<<- sim (
 # Print desired outputs based on user flags
 if (print_general_outputs == "yes")
 {
-  write.table(out$general_outputs, file = paste("outputs/general_outputs",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = general_IDs)
-  write.table(out$overdose_outputs, file = paste("outputs/all_types_overdose",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = active_oud_IDs)
-  write.table(out$mortality_outputs, file = paste("outputs/background_mortality",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = general_IDs)
+  write.table(out$general_outputs, file = paste("./output",strategy_id,"/general_outputs",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = general_IDs)
+  write.table(out$overdose_outputs, file = paste("./output",strategy_id,"/all_types_overdose",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = active_oud_IDs)
+  write.table(out$mortality_outputs, file = paste("./output",strategy_id,"/background_mortality",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = general_IDs)
   if (imax > 1)
   {
-    write.table(out$admission_to_trts, file = paste("outputs/admission_to_trts",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = block_idx[2:ceiling(imax/2)])
+    write.table(out$admission_to_trts, file = paste("./output",strategy_id,"/admission_to_trts",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = block_idx[2:ceiling(imax/2)])
   }
 }
 

@@ -54,10 +54,10 @@ check_general_inputs <- function() {
   {
     warning("Are you sure you want to include cost analysis in calibration mode?")
   }
-  if (run_type == "analysis" && input_type == "deterministic")
-  {
-    warning("Analysis mode cannot use deterministic inputs. Try using manual mode.")
-  }
+  #if (run_type == "analysis" && input_type == "deterministic")
+  #{
+  #  warning("Analysis mode cannot use deterministic inputs. Try using manual mode.")
+  #}
   
   # check entering cohort cycles
   if (time_varying_entering_cohort_cycles[length(time_varying_entering_cohort_cycles)] <  simulation_duration)
@@ -68,7 +68,7 @@ check_general_inputs <- function() {
   {
     warning("Time-varying entering cohort cycles should be identical.")
   }
-  if (!is.sorted.integer64(time_varying_entering_cohort_cycles))
+  if (!isTRUE(all.equal(sort(time_varying_entering_cohort_cycles),time_varying_entering_cohort_cycles)))
   {
     warning("Time-varying entering cohort cycles should be in increasing order")
   }
@@ -82,7 +82,7 @@ check_general_inputs <- function() {
   {
     warning("Time-varying overdose cycles should be identical.")
   }
-  if (!is.sorted.integer64(time_varying_overdose_cycles))
+  if(!isTRUE(all.equal(sort(time_varying_overdose_cycles),time_varying_overdose_cycles)))
   {
     warning("Time-varying overdose cycles should be in increasing order")
   }
@@ -96,7 +96,7 @@ check_general_inputs <- function() {
   {
     warning("Time-varying block transition cycles should be identical.")
   }
-  if (!is.sorted.integer64(time_varying_blk_trans_cycles))
+  if(!isTRUE(all.equal(sort(time_varying_blk_trans_cycles),time_varying_blk_trans_cycles)))
   {
     warning("Time-varying block transition cycles should be in increasing order")
   }
