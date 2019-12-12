@@ -31,6 +31,10 @@ check_load_gen_inputs <- function(){
   {
     warning("OUD transition values do not add to 1.")
   }
+  if (range(oud_trans_matrix)[1] < 0 | range(oud_trans_matrix)[2] > 1)
+  {
+    warning("Invalid probability values in OUD transition matrix!")
+  }
   # ------------------------------------------------------------------------------------------------------------------
   # checking block transtion matrix
   if ((dim(block_trans_matrix)[1] != total_num_compartments) | (dim(block_trans_matrix)[2] != (length(time_varying_blk_trans_cycles)*(ceiling(imax/2)+1))))
@@ -44,7 +48,10 @@ check_load_gen_inputs <- function(){
       warning("Block transition values do not add to 1.")
     }
   }
-
+  if (range(block_trans_matrix)[1] < 0 | range(block_trans_matrix)[2] > 1)
+  {
+    warning("Invalid probability values in block transition matrix!")
+  }
   if (anyNA(block_init_effect_matrix))
   {
     warning("Invalid values in block initiation effect input!")
@@ -56,6 +63,10 @@ check_load_gen_inputs <- function(){
   if (range(block_init_effect_matrix)[1] < 0 | range(block_init_effect_matrix)[2] > 1)
   {
     warning("Block initiation values should be between 0 and 1.")
+  }
+  if (range(block_init_effect_matrix)[1] < 0 | range(block_init_effect_matrix)[2] > 1)
+  {
+    warning("Invalid probability values in block initiation effect matrix!")
   }
   # -----------------------------------------------------------------------------------------------------------------
   # checking overdose inputs
@@ -71,6 +82,10 @@ check_load_gen_inputs <- function(){
   {
     warning("All type overdose values should be between 0 and 1.")
   }
+  if (range(all_types_overdose_matrix)[1] < 0 | range(all_types_overdose_matrix)[2] > 1)
+  {
+    warning("Invalid probability values in all types overdose matrix!")
+  }
   
   if (anyNA(fatal_overdose_vec))
   {
@@ -79,6 +94,10 @@ check_load_gen_inputs <- function(){
   if (range(fatal_overdose_vec)[1] < 0 | range(fatal_overdose_vec)[2] > 1)
   {
     warning("Fatal to all-type overdose values should be between 0 and 1.")
+  }
+  if (range(fatal_overdose_vec)[1] < 0 | range(fatal_overdose_vec)[2] > 1)
+  {
+    warning("Invalid probability values in fatal overdose vector!")
   }
   # ------------------------------------------------------------------------------------------------------------------
   # checking mortality inputs

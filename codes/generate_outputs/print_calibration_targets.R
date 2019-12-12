@@ -27,5 +27,5 @@ print_calibration_targets <- function()
   }
   targets_df <- data.frame(targets)
   colnames(targets_df) <- col_names
-  write.csv(targets_df,file=paste("outputs/calibration_targets",run_id,".csv",sep=""),row.names = FALSE, quote = FALSE)
+  write.csv(targets_df,file=paste("output",strategy_id,"/calibration_targets",run_id,".csv",sep=""),row.names = FALSE, quote = FALSE)
 }

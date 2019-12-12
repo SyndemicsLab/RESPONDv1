@@ -1,13 +1,13 @@
-# input1
+# input2
 initial_cohort_file <<- "./shared_data/init_cohort.csv"
 entering_chort_file <<- "./shared_data/entering_cohort.csv"
-oud_trans_file <<- "./input1/oud_trans.csv"
-block_trans_file <<- "./input1/block_trans.csv"
+oud_trans_file <<- "./input2/oud_trans.csv"
+block_trans_file <<- "./input2/block_trans.csv"
 block_init_effect_file <<- "./shared_data/block_init_effect.csv"
-all_type_overdose_file <<- "./input1/all_types_overdose.csv"
+all_type_overdose_file <<- "./input2/all_types_overdose.csv"
 fatal_overdose_file <<- "./shared_data/fatal_overdose.csv"
 background_mortality_file <<- "./shared_data/background_mortality.csv"
-SMR_file <<- "./input1/SMR.csv"
+SMR_file <<- "./input2/SMR.csv"
 healthcare_utilization_cost_file <<- "./shared_data/cost_life/healthcare_utilization_cost.csv"
 overdose_cost_file <<- "./shared_data/cost_life/overdose_cost.csv"
 treatment_utilization_cost_file <<- "./shared_data/cost_life/treatment_utilization_cost.csv"

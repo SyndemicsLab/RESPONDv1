@@ -30,11 +30,11 @@ print_costs <- function()
   }
   df <- data.frame(total_cost)
   colnames(df) <- col_names
-  write.csv(df,file=paste("outputs/cost_life/total_costs",run_id,".csv",sep = ""), quote= FALSE)
+  write.csv(df,file=paste("output",strategy_id,"/cost_life/total_costs",run_id,".csv",sep = ""), quote= FALSE)
 
   df <- data.frame(out$total_cost_per_perspective)
   colnames(df) <- c("total_cost","total_discounted_cost")
-  write.csv(df,file=paste("outputs/cost_life/CE_costs",run_id,".csv",sep=""), row.names = cost_perspectives,quote= FALSE)
+  write.csv(df,file=paste("output",strategy_id,"/cost_life/CE_costs",run_id,".csv",sep=""), row.names = cost_perspectives,quote= FALSE)
  #-----------------------------------------------------------------------------------------------------------------
   # print cost categories
   if (print_cost_categories == "yes")
@@ -53,10 +53,10 @@ print_costs <- function()
     }
     df <- data.frame(out$healthcare_utilization_cost)
     colnames(df) <- col_names
-    write.csv(df,file=paste("outputs/cost_life/healthcare_utilization_cost",run_id,".csv",sep = ""), quote= FALSE)
+    write.csv(df,file=paste("output",strategy_id,"/cost_life/healthcare_utilization_cost",run_id,".csv",sep = ""), quote= FALSE)
     df <- data.frame(out$overdose_cost)
     colnames(df) <- col_names
-    write.csv(df,file=paste("outputs/cost_life/overdose_cost",run_id,".csv", sep=""), quote= FALSE)
+    write.csv(df,file=paste("output",strategy_id,"/cost_life/overdose_cost",run_id,".csv", sep=""), quote= FALSE)
     
     # print treatment utilization and pharmaceutical cost
     per_perspective_costs <- dim(out$treatment_utilization_cost)[2]/length(cost_perspectives)
@@ -72,10 +72,10 @@ print_costs <- function()
     }
     df <- data.frame(out$treatment_utilization_cost)
     colnames(df) <- col_names
-    write.csv(df,file=paste("outputs/cost_life/treatment_utilization_cost",run_id,".csv",sep=""), quote= FALSE)
+    write.csv(df,file=paste("output",strategy_id,"/cost_life/treatment_utilization_cost",run_id,".csv",sep=""), quote= FALSE)
     df <- data.frame(out$pharmaceutical_cost)
     colnames(df) <- col_names
-    write.csv(df,file=paste("outputs/cost_life/pharmaceutical_cost",run_id,".csv",sep=""), quote= FALSE)
+    write.csv(df,file=paste("output",strategy_id,"cost_life/pharmaceutical_cost",run_id,".csv",sep=""), quote= FALSE)
   }
   
 }

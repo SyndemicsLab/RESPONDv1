@@ -20,10 +20,10 @@ if ("getopt" %in% rownames(installed.packages()) == FALSE)
 } else {
   library(getopt)
 }
+
 args <- commandArgs(trailingOnly=TRUE)
 strategy_id <- as.numeric(args[1])
 run_id <- as.numeric(args[2])
-num_runs <- as.numeric(args[3])
 
 # load general user inputs
 source(paste("input",strategy_id,"/input_file_paths.R", sep=""))
