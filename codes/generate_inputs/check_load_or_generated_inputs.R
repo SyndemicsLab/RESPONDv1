@@ -95,10 +95,6 @@ check_load_gen_inputs <- function(){
   {
     warning("Fatal to all-type overdose values should be between 0 and 1.")
   }
-  if (range(fatal_overdose_vec)[1] < 0 | range(fatal_overdose_vec)[2] > 1)
-  {
-    warning("Invalid probability values in fatal overdose vector!")
-  }
   # ------------------------------------------------------------------------------------------------------------------
   # checking mortality inputs
   if (anyNA(mort_vec))

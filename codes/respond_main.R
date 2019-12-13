@@ -29,40 +29,27 @@ run_id <- as.numeric(args[2])
 source(paste("input",strategy_id,"/input_file_paths.R", sep=""))
 source(paste("input",strategy_id,"/user_inputs.R", sep=""))
 
-# Set the seed if user has chosen an acceptable one.
-if (seed_type == "fixed")
-{
-  set.seed(run_id) 
-}
-
 # open a file to sink the errors
 msgcon <- file(paste("errors",run_id,".txt",sep=""), open = "w")
-sink(msgcon , append = FALSE, type = c("message"),
-     split = FALSE)
+sink(msgcon , append = FALSE, type = c("message"), split = FALSE)
 
 # check the general user inputs
 source("codes/generate_inputs/check_general_inputs.R")
 check_general_inputs()
 
-# source files
-sourceCpp("codes/simulation.cpp")
-source("codes/generate_outputs/generate_output_IDs.R")
-generate_output_IDs()
-
-# choose input type and then create them
-if (input_type == "deterministic")
-{
-  source("codes/generate_inputs/load_inputs.R")
-  load_inputs()
-} else {
-  source("codes/generate_inputs/generate_inputs.R")
-  generate_inputs()
-}
+# load deterministic inputs
+source("codes/generate_inputs/load_inputs.R")
+load_inputs()
 
 # check final inputs of the simulation
 source("codes/generate_inputs/check_load_or_generated_inputs.R")
 check_load_gen_inputs()
 
+# source files
+sourceCpp("codes/simulation.cpp")
+source("codes/generate_outputs/generate_output_IDs.R")
+generate_output_IDs()
+  
 # If there is any warning in inputs, stop and print the warning messages.
 if (length(warnings()) != 0)
 {
@@ -104,12 +91,6 @@ if (cost_analysis == "yes")
   print_costs()
 }
 
-if (run_type == "calibration")
-{
-  source("codes/generate_outputs/print_calibration_targets.R")
-  print_calibration_targets()
-}
-
 if (print_per_blk_output == "yes")
 {
   source("codes/generate_outputs/print_outputs_per_block.R")
@@ -121,8 +102,3 @@ if (length(general_stats_cycles) != 0)
   source("codes/generate_outputs/get_general_stats.R")
   get_general_stats_in_cycle(general_stats_cycles)
 }
-
-
-
-
-

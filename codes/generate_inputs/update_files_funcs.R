@@ -12,7 +12,7 @@ if ("stringr" %in% rownames(installed.packages()) == FALSE)
 update_blk_trans <- function (symbols,mult,file)
 {
   df <- read.csv(file)
-  # calculate number of columns per time interval
+  # calculate number of co  lumns per time interval
   tmp_cycle <- names(df)[5]
   tmp_cycle <- unlist(strsplit(tmp_cycle,"_"))
   tmp_cycle <- tmp_cycle[length(tmp_cycle)]

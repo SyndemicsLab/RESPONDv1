@@ -44,20 +44,6 @@ check_general_inputs <- function() {
   tmp2 <- which(block=="detox")          # if there is no detox in the block vector, assign the ID as -1
   if (length(tmp2) != 0)
     detox_block_id <<- tmp2-1               # -1 for index adjustment
-
-  # Check run types and input types
-  if (run_type == "calibration" && input_type == "deterministic")
-  {
-    warning("Calibration mode cannot use deterministic inputs!")
-  }
-  if (run_type == "calibration" && cost_analysis == "yes")
-  {
-    warning("Are you sure you want to include cost analysis in calibration mode?")
-  }
-  #if (run_type == "analysis" && input_type == "deterministic")
-  #{
-  #  warning("Analysis mode cannot use deterministic inputs. Try using manual mode.")
-  #}
   
   # check entering cohort cycles
   if (time_varying_entering_cohort_cycles[length(time_varying_entering_cohort_cycles)] <  simulation_duration)
@@ -101,11 +87,6 @@ check_general_inputs <- function() {
     warning("Time-varying block transition cycles should be in increasing order")
   }
   # -----------------------------------------------------------------------------------------------------------------
-   if (dir.exists("outputs") == FALSE)
-  {
-    dir.create("outputs")
-  }
-  
   if (cost_analysis == "no")
   {
     healthcare_utilization_cost <<- matrix(c(-1,-1),nrow = 1)
@@ -117,10 +98,9 @@ check_general_inputs <- function() {
   
   if (cost_analysis == "yes")
   {
-    if (dir.exists("outputs/cost_life") == FALSE)
+    if (dir.exists(paste("./output",strategy_id,"/cost_life",sep="")) == FALSE)
     {
-      dir.create("outputs/cost_life")
+      dir.create(paste("./output",strategy_id,"/cost_life",sep=""))
     }
   }
-
 }

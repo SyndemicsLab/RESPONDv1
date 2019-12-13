@@ -3,7 +3,7 @@
 load_inputs <- function() {
 
   #cohort initialization inputs
-  init_demographics_vec <<- read.csv(initial_cohort_file)$counts
+  init_demographics_vec <<- as.matrix(read.csv(initial_cohort_file)$counts)
   
   #------------------------------------------------------------------------------------------------------------
   # entering cohort inputs
@@ -71,10 +71,9 @@ load_inputs <- function() {
   tmp_csv <- read.csv(all_type_overdose_file,comment.char="",check.names = FALSE)
   all_types_overdose_matrix <<- as.matrix(tmp_csv[,5:ncol(tmp_csv)])
 
-  fatal_overdose_vec_tmp <- read.csv(fatal_overdose_file,comment.char="",check.names = FALSE)
-  fatal_overdose_vec <<- as.numeric(fatal_overdose_vec_tmp)
+  fatal_overdose_vec <<- as.matrix(read.csv(fatal_overdose_file,comment.char="",check.names = FALSE))
   
-  if((ncol(all_types_overdose_matrix) != length(time_varying_overdose_cycles)) | (ncol(fatal_overdose_vec_tmp) != length(time_varying_overdose_cycles)))
+  if((ncol(all_types_overdose_matrix) != length(time_varying_overdose_cycles)) | (ncol(fatal_overdose_vec) != length(time_varying_overdose_cycles)))
   {
     warning("Number of time-varying overdose columns in input table should be the same as length of time_varying_overdose_cycles in user_input.R ")
   }
@@ -82,9 +81,9 @@ load_inputs <- function() {
   for (i in 1:length(time_varying_overdose_cycles))
   {
      pos1 = gregexpr('_cycle',  colnames(all_types_overdose_matrix)[i])
-     pos2 = gregexpr('_cycle',  colnames(fatal_overdose_vec_tmp)[i])
+     pos2 = gregexpr('_cycle',  colnames(fatal_overdose_vec)[i])
      str1 <- substr(colnames(all_types_overdose_matrix)[i], pos1[[1]][1]+6, nchar(colnames(all_types_overdose_matrix)[i]))
-     str2 <- substr(colnames(fatal_overdose_vec_tmp)[i], pos2[[1]][1]+6, nchar(colnames(fatal_overdose_vec_tmp)[i]))   
+     str2 <- substr(colnames(fatal_overdose_vec)[i], pos2[[1]][1]+6, nchar(colnames(fatal_overdose_vec)[i]))   
      if (! (str1 == str2 & (str1 == time_varying_overdose_cycles[i])) )
      {
        warning("All types and fatal overdose cycles in .csv file should be the same as cycles in user_inputs.R")
@@ -92,7 +91,7 @@ load_inputs <- function() {
   }
   # -----------------------------------------------------------------------------------------------------------
   # background Mortality inputs
-  bg_mort <- read.csv(background_mortality_file)$death_prob
+  bg_mort <- as.matrix(read.csv(background_mortality_file)$death_prob)
   if (anyNA(bg_mort))
   {
     warning("Invalid values in background input!")
@@ -106,7 +105,7 @@ load_inputs <- function() {
     warning("Background mortality values should be between 0 and 1(exclusive).")
   }
   
-  SMR <- read.csv(SMR_file)$SMR
+  SMR <- as.matrix(read.csv(SMR_file)$SMR)
   if (anyNA(SMR))
   {
     warning("Invalid values in SMR input!")
