@@ -5,21 +5,21 @@
 # no_treatment always is considered as trt0.
 # treatment episodes would follow no_treatment. current order of trt: inpatient, outpatient
 # then post_treatment episodes are added in the same order as treatments.
-block <<- c("no_trt","detox","ntx","post-detox","post-ntx")
-#block <<- c("no_trt","detox","res","mmt","bup","ntx","cor",
-          #  "post_detox","post_res","post_mmt","post_bup","post_ntx","post_cor")
-#block <<- c("no_trt")
+
+block <<- c("no_trt","detox","res","mmt","bup","ntx","cor",
+            "post_detox","post_res","post_mmt","post_bup","post_ntx","post_cor")
+
 # age brackets, always from youngest to oldest
-#agegrp <<- c("10_14","15_19","20_24","25_29","30_34","35_39","40_44","45_49","50_54","55_59","60_64","65_69",
-#            "70_74","75_79","80_84","85_89","90_94","95_99")
-agegrp <<- c("10_14","15_19")
+agegrp <<- c("10_14","15_19","20_24","25_29","30_34","35_39","40_44","45_49","50_54","55_59","60_64","65_69",
+           "70_74","75_79","80_84","85_89","90_94","95_99")
+
 
 #gender groups, "m" or "male" is the reference group, so it should always come first
 sex <<- c("m","f")
 
 # OUD states: active states always come first. Then add non_active states in the same order as active ones.
-#oud <<- c("active_noninj","active_inj","nonactive_noninj","nonactive_inj")
-oud <<- c("active_noninj","nonactive_noninj")
+oud <<- c("active_noninj","active_inj","nonactive_noninj","nonactive_inj")
+
 # Duration of simulation in cycles. remainder of duration/periods should be 0.
 simulation_duration <<- 10
 

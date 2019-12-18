@@ -30,7 +30,7 @@ source(paste("input",strategy_id,"/input_file_paths.R", sep=""))
 source(paste("input",strategy_id,"/user_inputs.R", sep=""))
 
 # open a file to sink the errors
-msgcon <- file(paste("errors",run_id,".txt",sep=""), open = "w")
+msgcon <- file(paste("errors_",strategy_id,"_",run_id,".txt",sep=""), open = "w")
 sink(msgcon , append = FALSE, type = c("message"), split = FALSE)
 
 # check the general user inputs
@@ -49,12 +49,6 @@ check_load_gen_inputs()
 sourceCpp("codes/simulation.cpp")
 source("codes/generate_outputs/generate_output_IDs.R")
 generate_output_IDs()
-  
-# If there is any warning in inputs, stop and print the warning messages.
-if (length(warnings()) != 0)
-{
-  quit(save="no")
-}
 
 ### calling simulation function
 # "out" is the ouptput of the simulation. Each row is a cycle (starting from cycle 0 for initial stats) and each
@@ -81,7 +75,7 @@ if (print_general_outputs == "yes")
   write.table(out$mortality_outputs, file = paste("./output",strategy_id,"/background_mortality",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = general_IDs)
   if (imax > 1)
   {
-    write.table(out$admission_to_trts, file = paste("./output",strategy_id,"/admission_to_trts",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = block_idx[2:ceiling(imax/2)])
+    write.table(out$admission_to_trts, file = paste("./output",strategy_id,"/admission_to_trts",run_id,".csv",sep = ""),sep=",",row.names = FALSE,quote = FALSE, col.names = block[2:ceiling(imax/2)])
   }
 }
 

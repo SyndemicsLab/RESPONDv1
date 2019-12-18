@@ -21,7 +21,7 @@ update_blk_trans <- function (symbols,mult,file)
   
   for (c in 1:num_intervals)
   {
-    tmp_df <- as.matrix(df[,(4*c+1):(4*c+num_col)])    # seprate each time interval
+    tmp_df <- as.matrix(df[,((c-1)*num_col+1+4):((c*num_col)+4)])    # seprate each time interval. add 4 for description columns
     for (i in 1:nrow(tmp_df))   # read data row by row
     {
       row_values <- tmp_df[i,]
@@ -48,17 +48,14 @@ update_blk_trans <- function (symbols,mult,file)
         row_values[tmp] <- 1-sum(as.numeric(row_values_tmp[-tmp]))
         if (as.numeric(row_values[tmp]) < 0)
         {
-          warning(paste("Invalid block transition values!",i,sep = "_"))
+          stop(paste("Invalid block transition values!",i,sep = "_"))
         }
       }
       tmp_df[i,] <- row_values
     }
-    df[,(4*c+1):(4*c+num_col)] <- tmp_df
+     df[,((c-1)*num_col+1+4):((c*num_col)+4)] <- tmp_df
   }
-  if (length(warnings()) == 0)
-  {
-    write.csv(df,file,row.names = FALSE,quote = FALSE)
-  }
+  write.csv(df,file,row.names = FALSE,quote = FALSE)
 }
 # -------------------------------------------------------------------------------------------------------------------
 # update_fatal_od
@@ -78,11 +75,8 @@ update_fatal_od <- function (symbols,mult,file)
   }
   if (range(as.numeric(df))[1] < 0 | range(as.numeric(df))[2] > 1)
   {
-     warning("Invalid fatal overdose values!")         
+     stop("Invalid fatal overdose values!")         
   }
-  if (length(warnings()) == 0)
-  {
-    write.csv(df,file,row.names = FALSE,quote = FALSE)
-  }
+  write.csv(df,file,row.names = FALSE,quote = FALSE)
 }
 # -------------------------------------------------------------------------------------------------------------------

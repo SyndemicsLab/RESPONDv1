@@ -46,7 +46,7 @@ get_general_stats_in_cycle <- function (cycles)
         {
           if (tmp_cycles[ii]+1 <= t & t < tmp_cycles[ii+1])
           {
-            warning("Change in fatal overdoses ratios cannot happen between output time intervals!")
+            stop("Change in fatal overdoses ratios cannot happen between output time intervals!")
           }
         }
       }
@@ -102,9 +102,6 @@ get_general_stats_in_cycle <- function (cycles)
     
     counts <- data.frame(counts)
     colnames(counts) <- col_names
-    if (length(warnings()) == 0)
-    {
-      write.csv(counts, file = paste("./output",strategy_id,"/general_stats",run_id,".csv",sep = ""),row.names = block)
-    }
+    write.csv(counts, file = paste("./output",strategy_id,"/general_stats",run_id,".csv",sep = ""),row.names = block)
 }
 
