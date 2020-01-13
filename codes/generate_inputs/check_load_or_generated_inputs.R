@@ -117,7 +117,7 @@ check_load_gen_inputs <- function(){
     {
       warning("Invalid values in healthcare utilization cost inputs!")
     } 
-    if (nrow(healthcare_utilization_cost) != (total_num_compartments/imax) | (ncol(healthcare_utilization_cost) != (length(cost_perspectives))))
+    if (nrow(healthcare_utilization_cost) != (total_num_compartments) | (ncol(healthcare_utilization_cost) != (length(cost_perspectives))))
     {
       warning("Invalid number of healthcare utilization costs")
     }

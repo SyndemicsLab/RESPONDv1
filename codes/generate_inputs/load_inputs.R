@@ -122,7 +122,7 @@ load_inputs <- function() {
   if (cost_analysis == "yes")
   {
     tmp_csv <- read.csv(healthcare_utilization_cost_file)
-    healthcare_utilization_cost <<- as.matrix(tmp_csv[,4:ncol(tmp_csv)])
+    healthcare_utilization_cost <<- as.matrix(tmp_csv[,5:ncol(tmp_csv)])
     
     tmp_csv <- read.csv(overdose_cost_file)
     overdose_cost <<- as.matrix(tmp_csv[,2:ncol(tmp_csv)])

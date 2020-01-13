@@ -1,5 +1,10 @@
 print_costs <- function()
 {
+  if (dir.exists(paste("./output",strategy_id,"/cost_life",sep="")) == FALSE)
+  {
+    dir.create(paste("./output",strategy_id,"/cost_life",sep=""))
+  }
+  
   total_cost <- matrix(nrow = simulation_duration/periods, ncol = imax*length(cost_perspectives))
   for(c in 1:(simulation_duration/periods))
   {

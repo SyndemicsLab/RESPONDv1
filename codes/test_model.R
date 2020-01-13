@@ -9,7 +9,7 @@ library(data.table)
 # ------------------------------------------------------------------------------------------------------------------
 # Check initial cohort
 # compare the following stats with general_stats file for cycle 0
-init_cohort_input <- read.csv("inputs/init_cohort.csv")
+init_cohort_input <- read.csv("input1/init_cohort.csv")
 stat_input <- matrix(nrow = ceiling(imax/2), ncol = (2+lmax))
 for (i in 1:(ceiling(imax/2)))
 {
@@ -21,9 +21,9 @@ for (i in 1:(ceiling(imax/2)))
     stat_input[i,l+2] <- sum(init_cohort_input$counts[which(init_cohort_input$block==block_name & init_cohort_input$oud==oud[l])])
   }
 }
-stat_output <- read.csv("outputs/general_stats1.csv")
+stat_output <- read.csv("output1/general_stats1.csv")
 stat_output <- data.matrix(stat_output)
-stat_output <- stat_output[-(ceiling(imax/2)+1):-imax,2:ncol(stat_output)]
+stat_output <- stat_output[-(ceiling(imax/2)+1):-imax,2:(3+lmax)]
 
 isTRUE(all.equal(stat_input,stat_output, check.attributes=FALSE))
 # ------------------------------------------------------------------------------------------------------------------
@@ -86,16 +86,23 @@ isTRUE(all.equal(round(size_after_oud_trans, digits=12), round(out$general_outpu
 active_size <- lmax/2
 num_trts <- (imax-1)/2
 b_size <- imax*lmax      #here block is considered as 1 age/sex combo with all OUD states.
-bmax <- jmax*kmax   # idicates for how many blocks we want to check the results
+bmax <- jmax*kmax   # indicates for how many blocks we want to check the results
 trt <- matrix(data = NA, nrow=imax, ncol=jmax*kmax*lmax)   # +1 for cycle column
 B <- matrix(data = NA, nrow=imax*jmax*kmax*lmax, ncol=num_trts+2)  # here matrix B includes all trts + no_trt + corresponding_post_trt
 final_trt <- matrix(data = NA, nrow=imax, ncol=bmax*lmax)   
 num_admission_trts <- matrix(0, nrow = simulation_duration+1, ncol = floor(imax/2))
 size_after_blk_trans <- matrix(nrow = simulation_duration+1,ncol=num_cmp)
 size_after_blk_trans[1,] <- out$general_outputs[1,]
+# adjust for time-varying block trans
+cols <- num_trts+2
+interval_id <- 1
+interval_floor <- 1           
+interval_ceiling <- 3
 
-for (cycle in 2:(simulation_duration+1)) # starting from 2, to eliminate cycle 0
+#for (cycle in 2:(simulation_duration+1)) # starting from 2, to eliminate cycle 0
+for (cycle in (interval_floor+1):(interval_ceiling+1))
 {
+  block_trans_matrix_tmp <- block_trans_matrix[,((interval_id-1)*cols+1):(interval_id*cols)]
   for (i in 1:imax)   # read simulation outputs
   {
     trt[i,] <- size_after_oud_trans[cycle,((i-1)*kmax*jmax*lmax+1):(i*num_cmp/imax)]
@@ -105,7 +112,7 @@ for (cycle in 2:(simulation_duration+1)) # starting from 2, to eliminate cycle 0
   {
     for (i in 1:imax)
     {
-      B[it,] <- trt[i,j]*block_trans_matrix[it,]
+      B[it,] <- trt[i,j]*block_trans_matrix_tmp[it,]
       it <- it+1
     }
   }
@@ -164,10 +171,10 @@ isTRUE(all.equal(round(size_after_blk_trans, digits=12), round(out$general_outpu
 # -------------------------------------------------------------------------------------------------------------------
 # check overdose module
 tmp1 <- which(substring(general_IDs, 8, 9) == oud_idx[1])
-#tmp2 <- which(substring(general_IDs, 8, 9) == oud_idx[2])
+tmp2 <- which(substring(general_IDs, 8, 9) == oud_idx[2])
 #tmp3 <- which(substring(general_IDs, 8, 9) == oud_idx[3])
-#tmp <- sort(c(tmp1,tmp2))
-tmp <- sort(c(tmp1))
+tmp <- sort(c(tmp1,tmp2))
+#tmp <- sort(c(tmp1))
 all_overdose <- matrix(nrow = simulation_duration+1, ncol = dim(out$overdose_outputs)[2])
 size_after_overdose <- size_after_blk_trans
 all_overdose[1,] <- 0
@@ -261,34 +268,34 @@ for (c in 1:simulation_duration)
 {
   for (i in 1:length(blk_start_id))
   {
-    healthcare_util_cost1_r[c,i] <- sum(size_after_blk_trans[c+1,blk_start_id[i]:(blk_start_id[i]-1+num_cmp/imax)] * healthcare_utilization_cost[,1])
-    healthcare_util_cost2_r[c,i] <- sum(size_after_blk_trans[c+1,blk_start_id[i]:(blk_start_id[i]-1+num_cmp/imax)] * healthcare_utilization_cost[,2])
-    healthcare_util_cost3_r[c,i] <- sum(size_after_blk_trans[c+1,blk_start_id[i]:(blk_start_id[i]-1+num_cmp/imax)] * healthcare_utilization_cost[,3])
+    healthcare_util_cost1_r[c,i] <- sum(size_after_blk_trans[c+1,blk_start_id[i]:(blk_start_id[i]-1+num_cmp/imax)] * healthcare_utilization_cost[blk_start_id[i]:(blk_start_id[i]-1+num_cmp/imax),1])
+    healthcare_util_cost2_r[c,i] <- sum(size_after_blk_trans[c+1,blk_start_id[i]:(blk_start_id[i]-1+num_cmp/imax)] * healthcare_utilization_cost[blk_start_id[i]:(blk_start_id[i]-1+num_cmp/imax),2])
+    healthcare_util_cost3_r[c,i] <- sum(size_after_blk_trans[c+1,blk_start_id[i]:(blk_start_id[i]-1+num_cmp/imax)] * healthcare_utilization_cost[blk_start_id[i]:(blk_start_id[i]-1+num_cmp/imax),3])
   }
 }
 healthcare_util_cost_r <- cbind(healthcare_util_cost1_r,healthcare_util_cost2_r,healthcare_util_cost3_r)
 # -------------------------------------------------------------------------------------------------------------------
 # overdose cost
-# overdose time-varying cycles should be multiplicative of duration/periods for using this part.  ??
-blk_start_id <- seq(1,num_cmp/lmax,jmax*kmax)
+blk_start_id <- seq(1,num_cmp/2,jmax*kmax*lmax/2)
 od_cost1_r <- matrix(nrow = simulation_duration, ncol= imax)
 od_cost2_r <- matrix(nrow = simulation_duration, ncol= imax)
 od_cost3_r <- matrix(nrow = simulation_duration, ncol= imax)
 
-interal_id <- 1
-inteval_floor <- 1
+interval_id <- 1
+interval_floor <- 1
 interval_ceiling <- 6
 
-for (c in 1:simulation_duration)
+#for (c in 1:simulation_duration)
+for (c in interval_floor:interval_ceiling)  
 {
   for (i in 1:length(blk_start_id))
   {
-    od_cost1_r[c,i] <- sum(out$overdose_outputs[c+1,blk_start_id[i]:(blk_start_id[i]-1+jmax*kmax)]) * 
-      (fatal_overdose_vec[interal_id] * overdose_cost[2,1] + (1-fatal_overdose_vec[interal_id]) * overdose_cost[1,1])
-    od_cost2_r[c,i] <- sum(out$overdose_outputs[c+1,blk_start_id[i]:(blk_start_id[i]-1+jmax*kmax)]) * 
-      (fatal_overdose_vec[interal_id] * overdose_cost[2,2] + (1-fatal_overdose_vec[interal_id]) * overdose_cost[1,2])
-    od_cost3_r[c,i] <- sum(out$overdose_outputs[c+1,blk_start_id[i]:(blk_start_id[i]-1+jmax*kmax)]) * 
-      (fatal_overdose_vec[interal_id] * overdose_cost[2,3] + (1-fatal_overdose_vec[interal_id]) * overdose_cost[1,3])
+    od_cost1_r[c,i] <- sum(out$overdose_outputs[c+1,blk_start_id[i]:(blk_start_id[i]-1+jmax*kmax*lmax/2)]) * 
+      (fatal_overdose_vec[interval_id] * overdose_cost[2,1] + (1-fatal_overdose_vec[interval_id]) * overdose_cost[1,1])
+    od_cost2_r[c,i] <- sum(out$overdose_outputs[c+1,blk_start_id[i]:(blk_start_id[i]-1+jmax*kmax*lmax/2)]) * 
+      (fatal_overdose_vec[interval_id] * overdose_cost[2,2] + (1-fatal_overdose_vec[interval_id]) * overdose_cost[1,2])
+    od_cost3_r[c,i] <- sum(out$overdose_outputs[c+1,blk_start_id[i]:(blk_start_id[i]-1+jmax*kmax*lmax/2)]) * 
+      (fatal_overdose_vec[interval_id] * overdose_cost[2,3] + (1-fatal_overdose_vec[interval_id]) * overdose_cost[1,3])
   }
 }
 od_cost_r <- cbind(od_cost1_r,od_cost2_r,od_cost3_r)
@@ -345,7 +352,7 @@ for (c in 1:(simulation_duration/periods))
 
 total_cost_r <- cbind(total_cost1_r,total_cost2_r,total_cost3_r)
 
-output_file <- read.csv("outputs/cost_life/total_costs1.csv")
+output_file <- read.csv("output1/cost_life/total_costs1.csv")
 output_file <- as.matrix(output_file[,2:ncol(output_file)])
 total_cost_output <- matrix(nrow = simulation_duration/periods, ncol=length(cost_perspectives))
 for (c in 1:nrow(total_cost_output))
@@ -358,7 +365,7 @@ for (c in 1:nrow(total_cost_output))
 isTRUE(all.equal(total_cost_output,total_cost_r,check.attributes =FALSE))
 
 total_cost <- colSums(total_cost_r)
-output_file <- read.csv("outputs/cost_life/CE_costs1.csv")
+output_file <- read.csv("output1/cost_life/CE_costs1.csv")
 output_file <- as.vector(output_file[,2])
 isTRUE(all.equal(output_file,total_cost,check.attributes =FALSE))
 
@@ -389,22 +396,22 @@ disc_cost <- c(disc_cost1,disc_cost2,disc_cost3)
 isTRUE(all.equal(disc_cost,out$total_cost_per_perspective[,2], check.attributes = FALSE))
 
 #check printed outputs
-input_cost <- read.csv("outputs/cost_life/healthcare_utilization_cost1.csv")
+input_cost <- read.csv("output1/cost_life/healthcare_utilization_cost1.csv")
 input_cost <- data.matrix(input_cost)
 input_cost <- input_cost[,2:ncol(input_cost)]
 isTRUE(all.equal(input_cost,acc_healthcare_util_cost_r,check.attributes=FALSE))
 
-input_cost <- read.csv("outputs/cost_life/pharmaceutical_cost1.csv")
+input_cost <- read.csv("output1/cost_life/pharmaceutical_cost1.csv")
 input_cost <- data.matrix(input_cost)
 input_cost <- input_cost[,2:ncol(input_cost)]
 isTRUE(all.equal(input_cost,acc_pharma_cost_r,check.attributes=FALSE))
 
-input_cost <- read.csv("outputs/cost_life/overdose_cost1.csv")
+input_cost <- read.csv("output1/cost_life/overdose_cost1.csv")
 input_cost <- data.matrix(input_cost)
 input_cost <- input_cost[,2:ncol(input_cost)]
 isTRUE(all.equal(input_cost,acc_od_cost_r,check.attributes=FALSE))
 
-input_cost <- read.csv("outputs/cost_life/treatment_utilization_cost1.csv")
+input_cost <- read.csv("output1/cost_life/treatment_utilization_cost1.csv")
 input_cost <- data.matrix(input_cost)
 input_cost <- input_cost[,2:ncol(input_cost)]
 isTRUE(all.equal(input_cost,acc_trt_util_cost_r,check.attributes=FALSE))

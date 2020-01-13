@@ -245,7 +245,6 @@ List sim (
         it = 0;
         for (int i=0; i < imax; ++i)
         {
-          it2=0;
             for (int j=0; j < jmax; ++j)
               for (int k=0; k < kmax; ++k)
                 for (int l=0; l < lmax; ++l)
@@ -253,7 +252,7 @@ List sim (
                   size = cohort[cycle][i][j][k][l];
                   for (int ii=0; ii < cost_perspectives; ++ii)
                   { // healthcare utilization cost
-                    tmp = size *  health_util_cost_matrix(it2,ii);
+                    tmp = size *  health_util_cost_matrix(it,ii);//it2
                     health_util_cost[cost_period_idx][i][ii] += tmp;
                     total_cost(ii,0) += tmp;
                     tmp2 = tmp/pow(1+discouting_rate, cycle);
@@ -286,7 +285,6 @@ List sim (
                   //util[1][1] += tmp/pow(1+discouting_rate, cycle);
                   
                   ++it;
-                  ++it2;
                 }
        }
       } 

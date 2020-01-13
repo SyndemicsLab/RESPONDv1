@@ -95,12 +95,4 @@ check_general_inputs <- function() {
     overdose_cost <<- matrix(c(-1,-1),nrow = 1)
     #utility <<- matrix(c(-1,-1),nrow = 1)
   }
-  
-  if (cost_analysis == "yes")
-  {
-    if (dir.exists(paste("./output",strategy_id,"/cost_life",sep="")) == FALSE)
-    {
-      dir.create(paste("./output",strategy_id,"/cost_life",sep=""))
-    }
-  }
 }

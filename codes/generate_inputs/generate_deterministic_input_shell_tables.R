@@ -125,12 +125,12 @@ generate_deterministic_input_shell_tables <- function()
       dir.create("inputs/cost_life")
     }
     # healthcare utilization cost
-    factor_perm<-expand.grid(oud,sex,agegrp) 
-    colnames(factor_perm)<-c("oud","sex","agegrp")
-    factor_perm<-factor_perm[,c("agegrp","sex","oud")]
-    healthcare_utilization_cost <- rep("", total_num_compartments/imax)
+    factor_perm<-expand.grid(oud,sex,agegrp,block) 
+    colnames(factor_perm)<-c("oud","sex","agegrp","block")
+    factor_perm<-factor_perm[,c("block","agegrp","sex","oud")]
+    healthcare_utilization_cost <- rep("", total_num_compartments)
     df <- data.frame(factor_perm)
-    colnames(df) <- c("agegrp","sex","oud")
+    colnames(df) <- c("block","agegrp","sex","oud")
     for (i in 1:length(cost_perspectives))
     {
       df_tmp <- data.frame(healthcare_utilization_cost)
