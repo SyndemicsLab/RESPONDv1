@@ -12,3 +12,6 @@ healthcare_utilization_cost_file <<- "./shared_data/cost_life/healthcare_utiliza
 overdose_cost_file <<- "./shared_data/cost_life/overdose_cost.csv"
 treatment_utilization_cost_file <<- "./shared_data/cost_life/treatment_utilization_cost.csv"
 pharmaceutical_cost_file <<- "./shared_data/cost_life/pharmaceutical_cost.csv"
+background_utility_file <<- "./shared_data/cost_life/bg_utility.csv"
+oud_utility_file <<- "./shared_data/cost_life/oud_utility.csv"
+setting_utility_file <<- "./shared_data/cost_life/setting_utility.csv"

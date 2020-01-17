@@ -64,7 +64,7 @@ out<<- sim (
      imax,jmax, kmax,lmax,
      simulation_duration,
      cycles_in_age_brackets, periods,
-     healthcare_utilization_cost, treatment_utilization_cost, pharmaceutical_cost,overdose_cost,discounting_rate)
+     healthcare_utilization_cost, treatment_utilization_cost, pharmaceutical_cost,overdose_cost, util, discounting_rate)
 
 # -------------------------------------------------------------------------------------------------------------------
 # Print desired outputs based on user flags

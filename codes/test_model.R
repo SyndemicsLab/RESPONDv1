@@ -366,12 +366,51 @@ isTRUE(all.equal(total_cost_output,total_cost_r,check.attributes =FALSE))
 
 total_cost <- colSums(total_cost_r)
 output_file <- read.csv("output1/cost_life/CE_costs1.csv")
-output_file <- as.vector(output_file[,2])
+output_file <- as.vector(output_file[1:length(cost_perspectives),2])
 isTRUE(all.equal(output_file,total_cost,check.attributes =FALSE))
 
 total_sum_of_all <- sum(healthcare_util_cost_r) + sum(od_cost_r) + sum(trt_util_cost_r) + sum(pharma_cost_r)
 total_sum_of_all_output <- sum(output_file)
 isTRUE(all.equal(total_sum_of_all_output,total_sum_of_all))
+
+# Utility
+life <- matrix(rep(0,simulation_duration*imax),nrow = simulation_duration)
+util_min <- matrix(rep(0,simulation_duration*imax),nrow = simulation_duration)
+util_mult <- matrix(rep(0,simulation_duration*imax),nrow = simulation_duration)
+blk_start_id <- seq(1,num_cmp,num_cmp/imax)
+
+for (c in 1:simulation_duration)
+{
+  for (i in 1:length(blk_start_id))
+  {
+    life[c,i] <- sum(size_after_blk_trans[c+1,blk_start_id[i]:(blk_start_id[i]-1+num_cmp/imax)])
+    util_min[c,i] <- sum(size_after_blk_trans[c+1,blk_start_id[i]:(blk_start_id[i]-1+num_cmp/imax)] * util[blk_start_id[i]:(blk_start_id[i]-1+num_cmp/imax),1])
+    util_mult[c,i] <- sum(size_after_blk_trans[c+1,blk_start_id[i]:(blk_start_id[i]-1+num_cmp/imax)] * util[blk_start_id[i]:(blk_start_id[i]-1+num_cmp/imax),2])
+  }
+}
+
+if (length(which(util_min < util_mult) != 0))
+{
+      print("FALSE")
+} else { print("TRUE")}
+weekly_sum <- matrix(nrow = simulation_duration,ncol = 3)
+weekly_sum[,1] <- rowSums(life)
+weekly_sum[,2] <- rowSums(util_min)
+weekly_sum[,3] <- rowSums(util_mult)
+disc <- rep(0,3)
+for (i in 1:3)
+{
+  for (c in 1:simulation_duration)
+  {
+    disc[i] <- disc[i] + weekly_sum[c,i]/(1+discounting_rate)^c
+  }
+}
+
+output_file <- read.csv("output1/cost_life/CE_costs1.csv")
+output_file<- unlist(output_file[(length(cost_perspectives)+1):nrow(output_file),2:3])
+tmp <- c(sum(life),sum(util_min), sum(util_mult))
+tmp <- c(tmp,disc)
+isTRUE(all.equal(round(output_file, digits=12),round(tmp,digits=12), check.attributes=FALSE))
 
 # Discounting
 # For this part assume acc_costs are the the same as non_acc costs, in the other words, periods=1

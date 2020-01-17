@@ -37,10 +37,12 @@ print_costs <- function()
   colnames(df) <- col_names
   write.csv(df,file=paste("./output",strategy_id,"/cost_life/total_costs",run_id,".csv",sep = ""), quote= FALSE)
 
-  df <- data.frame(out$total_cost_per_perspective)
-  colnames(df) <- c("total_cost","total_discounted_cost")
-  write.csv(df,file=paste("./output",strategy_id,"/cost_life/CE_costs",run_id,".csv",sep=""), row.names = cost_perspectives,quote= FALSE)
- #-----------------------------------------------------------------------------------------------------------------
+  df <- rbind(out$total_cost_per_perspective, out$utility)
+  colnames(df) <- c("total","discounted_total")
+  row_names <- c(paste(cost_perspectives,"_cost",sep = ""),"life","utility_minimal","utility_multiplicative")
+  write.csv(df,file=paste("./output",strategy_id,"/cost_life/CE_costs",run_id,".csv",sep=""), 
+            row.names = row_names,quote= FALSE)
+  #-----------------------------------------------------------------------------------------------------------------
   # print cost categories
   if (print_cost_categories == "yes")
   {

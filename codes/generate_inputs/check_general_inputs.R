@@ -93,6 +93,6 @@ check_general_inputs <- function() {
     treatment_utilization_cost <<- matrix(c(-1,-1),nrow = 1)
     pharmaceutical_cost <<- matrix(c(-1,-1),nrow = 1)
     overdose_cost <<- matrix(c(-1,-1),nrow = 1)
-    #utility <<- matrix(c(-1,-1),nrow = 1)
+    util <<- matrix(c(-1,-1),nrow = 1)
   }
 }

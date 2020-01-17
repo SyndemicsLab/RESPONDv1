@@ -118,7 +118,7 @@ load_inputs <- function() {
   mort_vec <<- 1-exp(log(1-bg_mort)*SMR)
   
   # -----------------------------------------------------------------------------------------------------------
-  # Costs and quality of life
+  # Costs and Utility
   if (cost_analysis == "yes")
   {
     tmp_csv <- read.csv(healthcare_utilization_cost_file)
@@ -126,9 +126,6 @@ load_inputs <- function() {
     
     tmp_csv <- read.csv(overdose_cost_file)
     overdose_cost <<- as.matrix(tmp_csv[,2:ncol(tmp_csv)])
-    
-    #tmp_csv <- read.csv("inputs/cost_life/utility.csv")
-    #utility <<- as.matrix(tmp_csv[,5:ncol(tmp_csv)])
     
     # treatment utilization and pharmaceutical cost
     if (num_trts != 0)
@@ -139,6 +136,43 @@ load_inputs <- function() {
       tmp_csv <- read.csv(pharmaceutical_cost_file)
       pharmaceutical_cost <<- as.matrix(tmp_csv[,2:ncol(tmp_csv)])
     }
+    
+    bg_util <- read.csv(background_utility_file)$utility
+    oud_util <- read.csv(oud_utility_file)$utility
+    setting_util <- read.csv(setting_utility_file)$utility
+    if (length(bg_util) != jmax*kmax | min(bg_util) < 0 | max(bg_util) > 1)
+    {
+      warning("Invalid number of background utility values")
+    }
+    if (length(oud_util) != imax*lmax | min(oud_util) < 0 | max(oud_util) > 1)
+    {
+      warning("Invalid number of OUD utility values")
+    }
+    if (length(setting_util) != imax | min(setting_util) < 0 | max(setting_util) > 1)
+    {
+      warning("Invalid number of setting utility values")
+    }
+    bg_util <- rep(rep(bg_util, each=lmax),imax)
+    oud_util_seq <- seq(1,length(oud_util),lmax)
+    tmp2 <- c(-1)
+    for (i in 1:length(oud_util_seq))
+    {
+      tmp <- oud_util[oud_util_seq[i]:(i*lmax)]
+      tmp2 <- c(tmp2,rep(tmp,jmax*kmax))
+    }
+    oud_util <- tmp2[-1]
+    setting_util <- rep(setting_util,each=total_num_compartments/imax)
+    util <- cbind(bg_util,oud_util,setting_util)
+    util_min <- apply(util,1,min)
+    util_mult <- apply(util,1, prod)
+    util <<- cbind(util_min,util_mult)
+    
+    #factor_perm<-expand.grid(oud,sex,agegrp,block) 
+    #colnames(factor_perm)<-c("oud","sex","agegrp","block")
+    #factor_perm<-factor_perm[,c("block","agegrp","sex","oud")]
+    #df <- data.frame(factor_perm,bg_util,oud_util,setting_util, util_min, util_mult)
+    #write.csv(df,"util.csv")
+    
   } 
   
 }

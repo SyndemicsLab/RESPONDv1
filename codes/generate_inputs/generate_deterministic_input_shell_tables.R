@@ -176,14 +176,29 @@ generate_deterministic_input_shell_tables <- function()
       write.csv(df,file="inputs/cost_life/pharmaceutical_cost.csv",row.names = FALSE,quote = FALSE)
     }
     
-    # utility
-    # factor_perm<-expand.grid(oud,sex,agegrp,block) 
-    # colnames(factor_perm)<-c("oud","sex","agegrp","block")
-    # factor_perm<-factor_perm[,c("block","agegrp","sex","oud")]
-    # utility <- rep("", total_num_compartments)
-    # utility_tbl <- data.frame(factor_perm,utility,utility)
-    # colnames(utility_tbl) <- c("block","agegrp","sex","oud","minimal_utility","multiplicative_utility")
-    # write.csv(utility_tbl,file="inputs/cost_life/utility.csv",row.names = FALSE,quote = FALSE)
+    # backgrournd utility
+     factor_perm<-expand.grid(sex,agegrp) 
+     colnames(factor_perm)<-c("sex","agegrp")
+     factor_perm<-factor_perm[,c("agegrp","sex")]
+     utility <- rep("", jmax*kmax)
+     utility_tbl <- data.frame(factor_perm,utility)
+     colnames(utility_tbl) <- c("agegrp","sex","utility")
+     write.csv(utility_tbl,file="inputs/cost_life/bg_utility.csv",row.names = FALSE,quote = FALSE)
+     
+     # oud/block utility
+     factor_perm<-expand.grid(oud,block) 
+     colnames(factor_perm)<-c("oud","block")
+     factor_perm<-factor_perm[,c("block","oud")]
+     utility <- rep("", imax*lmax)
+     utility_tbl <- data.frame(factor_perm,utility)
+     colnames(utility_tbl) <- c("block","oud","utility")
+     write.csv(utility_tbl,file="inputs/cost_life/oud_utility.csv",row.names = FALSE,quote = FALSE)
+     
+     # setting utility
+     utility <- rep("",imax)
+     utility_tbl <- data.frame(block,utility)
+     colnames(utility_tbl) <- c("block","utility")
+     write.table(utility_tbl,file="inputs/cost_life/setting_utility.csv",row.names = FALSE,quote = FALSE, sep=",")
   }
   
 }

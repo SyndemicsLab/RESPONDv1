@@ -41,7 +41,6 @@ time_varying_overdose_cycles <<- c(6,9,12)    # each element should have its own
 cost_analysis <<- "no"   # enter "no" for calibration mode
 cost_perspectives <<- c("healthcare_system","societal","policy_makers")  # cost perspectives to be included in cost analysis
 
-#overdose_utility <<- 0.8    # the same for both fatal and non-fatal overdose
 discounting_rate <<- 0.0025
 # OUTPUT OPTIONS
 # ---------------------------------------------------------------------------------------------------------------------

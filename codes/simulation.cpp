@@ -23,7 +23,7 @@ List sim (
  const int imax,const int jmax, const int kmax, const int lmax,
  const int duration, const int cycles_in_age_brackets, const int periods,
  const NumericMatrix health_util_cost_matrix, const NumericMatrix trt_util_cost_matrix, const NumericMatrix med_cost_matrix, 
- const NumericMatrix od_cost_matrix,
+ const NumericMatrix od_cost_matrix, const NumericMatrix util_matrix,
  const double discouting_rate)
   {
     // ------------------------------------------------------------------------------------------------------------
@@ -44,8 +44,7 @@ List sim (
     double trt_util_cost[duration/periods][num_trts][cost_perspectives];
     double med_cost[duration/periods][num_trts][cost_perspectives];
     NumericMatrix total_cost(cost_perspectives,2);
-    //vector<double> life(2,0);
-    //double util[2][2];
+    NumericMatrix util(3,2);
 
     int it=0;                     // the counter that moves from the first row of input vector/matrix to its end
     int it2=0;                    // second counter to be used by some modules
@@ -83,14 +82,14 @@ List sim (
           od_cost[i][ii][iii] = 0;
         }
  
-   for (int i=0; i < duration/periods; ++i)
+    for (int i=0; i < duration/periods; ++i)
       for (int ii=0; ii < num_trts; ++ii)
         for (int iii=0; iii < cost_perspectives; ++iii)
         {
           trt_util_cost[i][ii][iii] = 0;
           med_cost[i][ii][iii] = 0;
         }         
-   
+    
     // calculating aging cycles
     NumericVector aging_cycles(1+floor((duration-floor(cycles_in_age_brackets/2+1))/cycles_in_age_brackets));
     for (int c=0; c < aging_cycles.size(); ++c)
@@ -242,6 +241,7 @@ List sim (
       if (health_util_cost_matrix(0,0) != -1)
       {
         double size = 0;
+        double util_min=0, util_mult=0;
         it = 0;
         for (int i=0; i < imax; ++i)
         {
@@ -252,12 +252,12 @@ List sim (
                   size = cohort[cycle][i][j][k][l];
                   for (int ii=0; ii < cost_perspectives; ++ii)
                   { // healthcare utilization cost
-                    tmp = size *  health_util_cost_matrix(it,ii);//it2
+                    tmp = size *  health_util_cost_matrix(it,ii);
                     health_util_cost[cost_period_idx][i][ii] += tmp;
                     total_cost(ii,0) += tmp;
                     tmp2 = tmp/pow(1+discouting_rate, cycle);
                     total_cost(ii,1) += tmp2;
-                    //std::cout<<size<<", "<<health_util_cost_matrix(it2,ii)<<std::endl;
+
                     if (i > 0 and i < num_trts+1)
                     { // treatment utilization cost
                       tmp = size * trt_util_cost_matrix(i-1,ii);
@@ -273,16 +273,15 @@ List sim (
                       total_cost(ii,1) += tmp2;
                     }
                   }
-                  // life
-                  //life[0] += size;
-                  //life[1] += size/pow(1+discouting_rate, cycle);
-                  // utility
-                 // tmp = size * util_matrix(it,0);
-                  //util[0][0] += tmp;
-                  //util[1][0] += tmp/pow(1+discouting_rate, cycle); 
-                  //tmp = size * util_matrix(it,1);
-                  //util[0][1] += tmp;
-                  //util[1][1] += tmp/pow(1+discouting_rate, cycle);
+                  // life and utility
+                  util(0,0) += size;
+                  util(0,1) += size/pow(1+discouting_rate, cycle);
+                  util_min = size * util_matrix(it,0);
+                  util(1,0) += util_min;
+                  util(1,1) += util_min/pow(1+discouting_rate, cycle); 
+                  util_mult = size * util_matrix(it,1);
+                  util(2,0) += util_mult;
+                  util(2,1) += util_mult/pow(1+discouting_rate, cycle);
                   
                   ++it;
                 }
@@ -350,7 +349,6 @@ List sim (
     NumericMatrix overdose_cost(duration/periods,imax*cost_perspectives);
     NumericMatrix treatment_util_cost(duration/periods,num_trts*cost_perspectives);
     NumericMatrix pharma_cost(duration/periods,num_trts*cost_perspectives);
-    //NumericVector life_util(6);
 
     for (int t=0; t < duration+1; ++t)     // for each time step
     { it=0;
@@ -396,17 +394,6 @@ List sim (
             ++it;
           }
       }
-
-      /*life_util[0] = life[0];
-      life_util[1] = life[1];
-      it = 2;
-      for (int i=0; i < 2; ++i)
-        for (int ii=0; ii < 2; ++ii)
-        {
-          life_util[it] = util[i][ii];   
-          ++it;
-        }
-      */
     } 
 
     if (health_util_cost_matrix(0,0) != -1)
@@ -420,7 +407,8 @@ List sim (
         Rcpp::Named("treatment_utilization_cost") = treatment_util_cost,
         Rcpp::Named("pharmaceutical_cost") = pharma_cost,
         Rcpp::Named("overdose_cost") = overdose_cost,
-        Rcpp::Named("total_cost_per_perspective") = total_cost
+        Rcpp::Named("total_cost_per_perspective") = total_cost,
+        Rcpp::Named("utility") = util
       );
     }
     

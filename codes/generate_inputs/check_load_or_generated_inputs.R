@@ -129,15 +129,6 @@ check_load_gen_inputs <- function(){
     {
       warning("Invalid number of overdose costs")
     }
-    # if (anyNA(utility))
-    # {
-    #   warning("Invalid values in utility inputs!")
-    # } 
-    # if (nrow(utility) != total_num_compartments & ncol(utility) != 2)
-    # {
-    #   warning("Invalid number of utility values")
-    # }
-    # treatment utilizatiohn and pharmaceutical cost
     if (num_trts != 0)
     {
       if (anyNA(treatment_utilization_cost) | anyNA(pharmaceutical_cost))
@@ -153,6 +144,16 @@ check_load_gen_inputs <- function(){
       {
         warning("Invalid number of pharmaceutical costs")
       }
+    }
+    
+    # Utility
+    if (ncol(util) != 2 | nrow(util) != total_num_compartments)
+    {
+      warning("Invalid number of utility values")
+    }
+    if (min(util) < 0 | max(util) > 1)
+    {
+      warning("Utilities must be between 0 and 1!")
     }
   }
 }
