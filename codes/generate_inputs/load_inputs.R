@@ -7,8 +7,11 @@ load_inputs <- function() {
   
   #------------------------------------------------------------------------------------------------------------
   # entering cohort inputs
-  
-  tmp_csv <- read.csv(entering_chort_file,comment.char="",check.names = FALSE)
+  tmp_csv <- read.csv(entering_cohort_file,comment.char="",check.names = FALSE)
+  if (ncol(tmp_csv) == 3)
+  {
+    col_name <- colnames(tmp_csv[3])
+  }
   tmp_csv <- as.matrix(tmp_csv[,3:ncol(tmp_csv)])
   entering_cohort_matrix <<- tmp_csv
   if (range(entering_cohort_matrix)[1] < 0 | range(entering_cohort_matrix)[2] > 1)
@@ -25,16 +28,25 @@ load_inputs <- function() {
     warning("Number of time-varying entering cohort columns in input table should be the same as length of time_varying_entering_cohort_cycles in user_input.R ")
   }
   
-  for (i in 1:length(time_varying_entering_cohort_cycles))
+  if (ncol(entering_cohort_matrix) == 1)
   {
-    pos = gregexpr('_cycle',  colnames(entering_cohort_matrix)[i])
-    str <- substr(colnames(entering_cohort_matrix)[i], pos[[1]][1]+6, nchar(colnames(entering_cohort_matrix)[i]))
-    if (str != time_varying_entering_cohort_cycles[i])
+    pos = gregexpr('_cycle',col_name)
+    str <- substr(col_name, pos[[1]][1]+6, nchar(col_name))
+    if (str != time_varying_entering_cohort_cycles[1])
     {
       warning("Enetering cohort cycles in .csv file should be the same as cycles in user_inputs.R")
     }
+  } else {
+    for (i in 1:length(time_varying_entering_cohort_cycles))
+    {
+      pos = gregexpr('_cycle',  colnames(entering_cohort_matrix)[i])
+      str <- substr(colnames(entering_cohort_matrix)[i], pos[[1]][1]+6, nchar(colnames(entering_cohort_matrix)[i]))
+      if (str != time_varying_entering_cohort_cycles[i])
+      {
+        warning("Enetering cohort cycles in .csv file should be the same as cycles in user_inputs.R")
+      }
+    }
   }
-
   #------------------------------------------------------------------------------------------------------------
   #OUD transition inputs
   tmp_csv <- read.csv(oud_trans_file)
@@ -69,26 +81,47 @@ load_inputs <- function() {
   # # -----------------------------------------------------------------------------------------------------------
   # # Overdose inputs
   tmp_csv <- read.csv(all_type_overdose_file,comment.char="",check.names = FALSE)
+  if (ncol(tmp_csv) == 5)
+  {
+    col_name_all <- colnames(tmp_csv[5])
+  }
   all_types_overdose_matrix <<- as.matrix(tmp_csv[,5:ncol(tmp_csv)])
 
   fatal_overdose_vec <<- as.matrix(read.csv(fatal_overdose_file,comment.char="",check.names = FALSE))
+  if (ncol(fatal_overdose_vec) == 1)
+  {
+    col_name_f <- colnames(fatal_overdose_vec)
+  }
   
   if((ncol(all_types_overdose_matrix) != length(time_varying_overdose_cycles)) | (ncol(fatal_overdose_vec) != length(time_varying_overdose_cycles)))
   {
     warning("Number of time-varying overdose columns in input table should be the same as length of time_varying_overdose_cycles in user_input.R ")
   }
-  
-  for (i in 1:length(time_varying_overdose_cycles))
+
+  if (ncol(all_types_overdose_matrix) == 1)
   {
-     pos1 = gregexpr('_cycle',  colnames(all_types_overdose_matrix)[i])
-     pos2 = gregexpr('_cycle',  colnames(fatal_overdose_vec)[i])
-     str1 <- substr(colnames(all_types_overdose_matrix)[i], pos1[[1]][1]+6, nchar(colnames(all_types_overdose_matrix)[i]))
-     str2 <- substr(colnames(fatal_overdose_vec)[i], pos2[[1]][1]+6, nchar(colnames(fatal_overdose_vec)[i]))   
-     if (! (str1 == str2 & (str1 == time_varying_overdose_cycles[i])) )
-     {
-       warning("All types and fatal overdose cycles in .csv file should be the same as cycles in user_inputs.R")
-     }
+    pos1 = gregexpr('_cycle',col_name_all)
+    pos2 = gregexpr('_cycle',col_name_f)
+    str1 <- substr(col_name_all, pos1[[1]][1]+6, nchar(col_name_all))
+    str2 <- substr(col_name_f, pos2[[1]][1]+6, nchar(col_name_f))
+    if (! (str1 == str2 & (str1 == time_varying_overdose_cycles[1])) )
+    {
+      warning("All types and fatal overdose cycles in .csv file should be the same as cycles in user_inputs.R")
+    }
+  } else {
+    for (i in 1:length(time_varying_overdose_cycles))
+    {
+      pos1 = gregexpr('_cycle',  colnames(all_types_overdose_matrix)[i])
+      pos2 = gregexpr('_cycle',  colnames(fatal_overdose_vec)[i])
+      str1 <- substr(colnames(all_types_overdose_matrix)[i], pos1[[1]][1]+6, nchar(colnames(all_types_overdose_matrix)[i]))
+      str2 <- substr(colnames(fatal_overdose_vec)[i], pos2[[1]][1]+6, nchar(colnames(fatal_overdose_vec)[i]))   
+      if (! (str1 == str2 & (str1 == time_varying_overdose_cycles[i])) )
+      {
+        warning("All types and fatal overdose cycles in .csv file should be the same as cycles in user_inputs.R")
+      }
+    }
   }
+
   # -----------------------------------------------------------------------------------------------------------
   # background Mortality inputs
   bg_mort <- as.matrix(read.csv(background_mortality_file)$death_prob)

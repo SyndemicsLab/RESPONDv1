@@ -1,6 +1,6 @@
-# input2
+# input1
 initial_cohort_file <<- "./input1/init_cohort.csv"
-entering_chort_file <<- "./input1/entering_cohort.csv"
+entering_cohort_file <<- "./input1/entering_cohort.csv"
 oud_trans_file <<- "./shared_data/oud_trans.csv"
 block_trans_file <<- "./shared_data/block_trans.csv"
 block_init_effect_file <<- "./shared_data/block_init_effect.csv"
