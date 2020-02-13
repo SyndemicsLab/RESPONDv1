@@ -30,7 +30,8 @@ source(paste("input",strategy_id,"/input_file_paths.R", sep=""))
 source(paste("input",strategy_id,"/user_inputs.R", sep=""))
 
 # open a file to sink the errors
-msgcon <- file(paste("errors_",strategy_id,"_",run_id,".txt",sep=""), open = "w")
+error_file_name <- paste("errors_",strategy_id,"_",run_id,".txt",sep="")
+msgcon <- file(error_file_name, open = "w")
 sink(msgcon , append = FALSE, type = c("message"), split = FALSE)
 
 # check the general user inputs
@@ -50,6 +51,11 @@ sourceCpp("codes/simulation.cpp")
 source("codes/generate_outputs/generate_output_IDs.R")
 generate_output_IDs()
 
+if (file.size(error_file_name) != 0)
+{
+  stop("Fix warnings before running the model!")
+}
+  
 ### calling simulation function
 # "out" is the ouptput of the simulation. Each row is a cycle (starting from cycle 0 for initial stats) and each
 # column is number of persons within each compartment. Compartments are in the increasing order based on their output IDs. 

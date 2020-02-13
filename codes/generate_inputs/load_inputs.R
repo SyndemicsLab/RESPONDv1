@@ -56,6 +56,14 @@ load_inputs <- function() {
   # # Block transition inputs
   tmp_csv <- read.csv(block_trans_file,comment.char="",check.names = FALSE)
   block_trans_matrix <<- as.matrix(tmp_csv[,5:ncol(tmp_csv)])
+
+  tmp <- tmp_csv[which(tmp_csv$initial_block==block[1]),]
+  post_trt_cols <- grep("post_trt",colnames(tmp))
+  tmp <- tmp[,post_trt_cols]
+  if (length(which(tmp != 0) != 0))
+  {
+    warning("There is no post-treatment for no-treatment block, so the corresponding block transition value should be 0!")
+  }
   
   tmp_csv <- read.csv(block_init_effect_file)
   block_init_effect_matrix <<- as.matrix(tmp_csv[,2:ncol(tmp_csv)])
@@ -161,8 +169,11 @@ load_inputs <- function() {
     overdose_cost <<- as.matrix(tmp_csv[,2:ncol(tmp_csv)])
     
     # treatment utilization and pharmaceutical cost
-    if (num_trts != 0)
+    if (num_trts == 0)
     {
+      treatment_utilization_cost <<- t(rep(0,length(cost_perspectives)))
+      pharmaceutical_cost <<- t(rep(0,length(cost_perspectives)))
+    } else {
       tmp_csv <- read.csv(treatment_utilization_cost_file)
       treatment_utilization_cost <<- as.matrix(tmp_csv[,2:ncol(tmp_csv)])
       

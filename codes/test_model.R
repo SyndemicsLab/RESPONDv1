@@ -9,6 +9,7 @@ library(data.table)
 # ------------------------------------------------------------------------------------------------------------------
 # Check initial cohort
 # compare the following stats with general_stats file for cycle 0
+# general_stats file should ONLY include cycle 0
 init_cohort_input <- read.csv("input1/init_cohort.csv")
 stat_input <- matrix(nrow = ceiling(imax/2), ncol = (2+lmax))
 for (i in 1:(ceiling(imax/2)))
@@ -24,6 +25,10 @@ for (i in 1:(ceiling(imax/2)))
 stat_output <- read.csv("output1/general_stats1.csv")
 stat_output <- data.matrix(stat_output)
 stat_output <- stat_output[-(ceiling(imax/2)+1):-imax,2:(3+lmax)]
+
+# for only no-trt case:
+#stat_output <- stat_output[,2:(3+lmax)]
+#stat_input <- as.numeric(stat_input)
 
 isTRUE(all.equal(stat_input,stat_output, check.attributes=FALSE))
 # ------------------------------------------------------------------------------------------------------------------
@@ -350,6 +355,19 @@ for (c in 1:(simulation_duration/periods))
                        + sum(acc_pharma_cost_r[c,(2*num_trts+1):(3*num_trts)]) + sum(acc_od_cost_r[c,(2*imax+1):(3*imax)]))
 }
 
+# for ONLY no-trt case
+# for (c in 1:(simulation_duration/periods))
+# {
+#   total_cost1_r[c] <- (sum(acc_healthcare_util_cost_r[c,1:imax]) + 0
+#                        + 0 + sum(acc_od_cost_r[c,1:imax]))
+#   
+#   total_cost2_r[c] <- (sum(acc_healthcare_util_cost_r[c,(imax+1):(2*imax)]) + 0
+#                        + 0 + sum(acc_od_cost_r[c,(imax+1):(2*imax)]))
+#   
+#   total_cost3_r[c] <- (sum(acc_healthcare_util_cost_r[c,(2*imax+1):(3*imax)]) + 0
+#                        + 0 + sum(acc_od_cost_r[c,(2*imax+1):(3*imax)]))
+# }
+
 total_cost_r <- cbind(total_cost1_r,total_cost2_r,total_cost3_r)
 
 output_file <- read.csv("output1/cost_life/total_costs1.csv")
@@ -365,7 +383,7 @@ for (c in 1:nrow(total_cost_output))
 isTRUE(all.equal(total_cost_output,total_cost_r,check.attributes =FALSE))
 
 total_cost <- colSums(total_cost_r)
-output_file <- read.csv("output1/cost_life/CE_costs1.csv")
+output_file <- read.csv("output1/cost_life/CE_outputs1.csv")
 output_file <- as.vector(output_file[1:length(cost_perspectives),2])
 isTRUE(all.equal(output_file,total_cost,check.attributes =FALSE))
 
@@ -406,7 +424,7 @@ for (i in 1:3)
   }
 }
 
-output_file <- read.csv("output1/cost_life/CE_costs1.csv")
+output_file <- read.csv("output1/cost_life/CE_outputs1.csv")
 output_file<- unlist(output_file[(length(cost_perspectives)+1):nrow(output_file),2:3])
 tmp <- c(sum(life),sum(util_min), sum(util_mult))
 tmp <- c(tmp,disc)
