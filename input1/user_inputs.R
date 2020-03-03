@@ -27,7 +27,6 @@ cycles_in_age_brackets <<- 5      # number of cycles in each age bracket. With w
 
 # entering cohort parameters
 time_varying_entering_cohort_cycles <<- c(6,9,12)    # time intervals for entering cohort. Only the upper limit is inclusive.
-entering_cohort_total_size <<- c(1000,2000,3000)      # total size of entering cohort in each cycle in each specific time interval. The length of this vector should be the same as length of time varying cycles
 
 # block transition parameters
 time_varying_blk_trans_cycles <<- c(3,10) # each element should have its own matrix. Each of thses matrices represents a time interval. Only the upper limit is inclusive.

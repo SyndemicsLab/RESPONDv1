@@ -12,16 +12,7 @@ load_inputs <- function() {
   {
     col_name <- colnames(tmp_csv[3])
   }
-  tmp_csv <- as.matrix(tmp_csv[,3:ncol(tmp_csv)])
-  entering_cohort_matrix <<- tmp_csv
-  if (range(entering_cohort_matrix)[1] < 0 | range(entering_cohort_matrix)[2] > 1)
-  {
-    warnings("Invalid probability values in entering cohort matrix!")
-  }
-  for (i in 1:length(entering_cohort_total_size))
-  {
-    entering_cohort_matrix[,i] <<- tmp_csv[,i]*entering_cohort_total_size[i]
-  }
+  entering_cohort_matrix <<- as.matrix(tmp_csv[,3:ncol(tmp_csv)])
   
   if(ncol(entering_cohort_matrix) != length(time_varying_entering_cohort_cycles))
   {

@@ -17,10 +17,6 @@ check_load_gen_inputs <- function(){
   {
     warning("Invalid number of entering cohort values")
   }
-  if (!isTRUE(all.equal(colSums(entering_cohort_matrix),entering_cohort_total_size, check.attributes = FALSE, tolerance = 0.00001)))
-  {
-    warning("Values of each column in entering_cohort_matrix should add to total N")
-  }
   # ------------------------------------------------------------------------------------------------------------------
   # checking oud trans matrix
   if (dim(oud_trans_matrix)[1] != total_num_compartments | dim(oud_trans_matrix)[2] != lmax)

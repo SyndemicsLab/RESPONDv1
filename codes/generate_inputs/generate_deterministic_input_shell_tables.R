@@ -20,7 +20,7 @@ generate_deterministic_input_shell_tables <- function()
   for (i in 1:(length(time_varying_entering_cohort_cycles)))
   {
     df_tmp <- data.frame(counts)
-    col_names_tmp <- c(paste("proportion_of_new_comers_cycle",time_varying_entering_cohort_cycles[i],sep=""))
+    col_names_tmp <- c(paste("number_of_new_comers_cycle",time_varying_entering_cohort_cycles[i],sep=""))
     colnames(df_tmp) <- col_names_tmp
     factor_perm <- cbind(factor_perm,df_tmp)
   }
