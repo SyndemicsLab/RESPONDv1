@@ -2,5 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-outputs/
+output*/
+inputs/
 *.Rproj

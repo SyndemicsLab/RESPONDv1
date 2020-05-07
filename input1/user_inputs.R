@@ -7,7 +7,8 @@
 # then post_treatment episodes are added in the same order as treatments.
 
 block <<- c("no_trt","detox","res","mmt","bup","ntx","cor",
-            "post-detox","post-res","post-mmt","post-bup","post-ntx","post-cor")
+            "post_detox","post_res","post_mmt","post_bup","post_ntx","post_cor")
+
             
 # age brackets, always from youngest to oldest
 agegrp <<- c("10_14","15_19","20_24","25_29","30_34","35_39","40_44","45_49","50_54","55_59","60_64","65_69",

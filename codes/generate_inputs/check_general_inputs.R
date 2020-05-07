@@ -87,6 +87,13 @@ check_general_inputs <- function() {
     warning("Time-varying block transition cycles should be in increasing order")
   }
   # -----------------------------------------------------------------------------------------------------------------
+  # check general stats cycles
+  tmp <- sort(general_stats_cycles)
+  if(!isTRUE(all.equal(tmp,general_stats_cycles)))
+  {
+    warning("general stat cycles should be in increasing order!")
+  }
+
   if (cost_analysis == "no")
   {
     healthcare_utilization_cost <<- matrix(c(-1,-1),nrow = 1)

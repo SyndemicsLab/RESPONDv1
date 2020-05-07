@@ -1,7 +1,7 @@
 get_general_stats_in_cycle <- function (cycles)
 {
   block_size <- jmax*kmax*lmax
-  counts <- matrix(nrow = imax, ncol = length(cycles)*(3+lmax))   # 1 for total size, 1 for male count, 1 for accumulated fatal overdose and lmax for all oud states
+  counts <- matrix(nrow = imax, ncol = length(cycles)*(4+lmax))   # 1 for total size, 1 for male count, 1 for accumulated fatal overdose, 1 for admissions and lmax for all oud states
   
   for (i in 1:imax) # for each block
   {
@@ -72,10 +72,29 @@ get_general_stats_in_cycle <- function (cycles)
       }
       it <- it+1
     }
+    # treatement admissions counts
+    it2 <- 0
+    for (cycle in cycles)
+    {
+        if (i >= 2 & i <= (num_trts+1))
+        {
+          if (cycle == 0)
+          {
+            counts[i,it] <- 0
+          } else {
+            counts[i,it] <-  sum(out$admission_to_trts[(it2+2):(cycle+1),i-1])
+            it2 <- cycle
+          } 
+        } else {
+          counts[i,it] <- NA
+        }
+      it <- it+1
+    }
+
   } # for all blocks
-  
+
     it <- 1
-    col_names <- rep("",length(cycles)*(3+lmax))
+    col_names <- rep("",length(cycles)*(4+lmax))
     for (cycle in cycles)
     {
       col_names[it] <- paste("total_size_cycle",cycle,sep="") 
@@ -97,6 +116,11 @@ get_general_stats_in_cycle <- function (cycles)
     for (cycle in cycles)
     {
       col_names[it] <- paste("accumulated_fatal_od_cycle",cycle,sep="") 
+      it <- it+1
+    }
+    for (cycle in cycles)
+    {
+      col_names[it] <- paste("accumulated_admissions_cycle",cycle,sep="") 
       it <- it+1
     }
     
