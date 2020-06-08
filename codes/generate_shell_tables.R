@@ -5,7 +5,7 @@
 # all codes and inputs should be inside this folder in their specific format, name and path.
 #setwd("~/workspace/RESPOND")
 
-msgcon <- file(paste("errors.txt",sep=""), open = "w")
+msgcon <- file(paste("generate_deterministic_shell_tables_errors.txt",sep=""), open = "w")
 sink(msgcon , append = FALSE, type = c("message"), split = FALSE)
 
 # load general user inputs

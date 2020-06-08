@@ -146,6 +146,10 @@ load_inputs <- function() {
   {
     warning("Invalid number of SMR values")
   }
+  if (range(SMR)[1]<1)
+  {
+    warning("SMR values cannot be less than 1!")
+  }
   bg_mort <- rep(rep(bg_mort,each= lmax),imax)
   mort_vec <<- 1-exp(log(1-bg_mort)*SMR)
   

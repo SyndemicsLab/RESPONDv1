@@ -2,13 +2,13 @@
 check_load_gen_inputs <- function(){
   
   #checking initial cohort vector
-  if (anyNA(init_demographics_vec) | ((length(init_demographics_vec) != (ceiling(imax/2)*jmax*kmax*lmax))))
+  if (anyNA(init_demographics_vec) | ((length(init_demographics_vec) != (ceiling(imax/2)*jmax*kmax*lmax))) | range(init_demographics_vec)[1]<0)
   {
     warning("Invalid values in initial cohort input!")
   }
   # ------------------------------------------------------------------------------------------------------------------
   # checking entering cohort matrix
-  if (anyNA(entering_cohort_matrix))
+  if (anyNA(entering_cohort_matrix) | range(entering_cohort_matrix)[1]<0)
   {
     warning("Invalid values in entering cohort input!")
   }
@@ -60,10 +60,6 @@ check_load_gen_inputs <- function(){
   {
     warning("Block initiation values should be between 0 and 1.")
   }
-  if (range(block_init_effect_matrix)[1] < 0 | range(block_init_effect_matrix)[2] > 1)
-  {
-    warning("Invalid probability values in block initiation effect matrix!")
-  }
   # -----------------------------------------------------------------------------------------------------------------
   # checking overdose inputs
   if (anyNA(all_types_overdose_matrix))
@@ -77,10 +73,6 @@ check_load_gen_inputs <- function(){
   if (range(all_types_overdose_matrix)[1] < 0 | range(all_types_overdose_matrix)[2] > 1)
   {
     warning("All type overdose values should be between 0 and 1.")
-  }
-  if (range(all_types_overdose_matrix)[1] < 0 | range(all_types_overdose_matrix)[2] > 1)
-  {
-    warning("Invalid probability values in all types overdose matrix!")
   }
   
   if (anyNA(fatal_overdose_vec))
@@ -104,12 +96,13 @@ check_load_gen_inputs <- function(){
   if (range(mort_vec)[1] < 0 | range(mort_vec)[2] > 1)
   {
     warning("Mortality values should be between 0 and 1.")
-  }# ------------------------------------------------------------------------------------------------------------------
-  # Checking healcare system cost
+  }
+  # ------------------------------------------------------------------------------------------------------------------
+  # Checking healthcare system cost
   # healthcare utilization and overdose cost
   if (cost_analysis == "yes")
   {
-    if (anyNA(healthcare_utilization_cost))
+    if (anyNA(healthcare_utilization_cost) | range(healthcare_utilization_cost)[1] < 0)
     {
       warning("Invalid values in healthcare utilization cost inputs!")
     } 
@@ -117,7 +110,7 @@ check_load_gen_inputs <- function(){
     {
       warning("Invalid number of healthcare utilization costs")
     }
-    if (anyNA(overdose_cost))
+    if (anyNA(overdose_cost)| range(overdose_cost)[1] < 0)
     {
       warning("Invalid values in overdose cost inputs!")
     } 
@@ -128,6 +121,11 @@ check_load_gen_inputs <- function(){
     if (num_trts != 0)
     {
       if (anyNA(treatment_utilization_cost) | anyNA(pharmaceutical_cost))
+      {
+        warning("Invalid values in treatment utilization or pharmaceutical cost!")
+      }
+      
+      if (range(treatment_utilization_cost)[1]<0 | range(pharmaceutical_cost)[1]<0)
       {
         warning("Invalid values in treatment utilization or pharmaceutical cost!")
       }

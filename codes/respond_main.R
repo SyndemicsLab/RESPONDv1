@@ -25,14 +25,14 @@ args <- commandArgs(trailingOnly=TRUE)
 strategy_id <- as.numeric(args[1])
 run_id <- as.numeric(args[2])
 
+# open a file to sink the errors
+error_file_name <- paste("sim_errors_",strategy_id,"_",run_id,".txt",sep="")
+msgcon <- file(error_file_name, open = "w")
+sink(msgcon , append = FALSE, type = c("message"), split = FALSE)
+
 # load general user inputs
 source(paste("input",strategy_id,"/input_file_paths.R", sep=""))
 source(paste("input",strategy_id,"/user_inputs.R", sep=""))
-
-# open a file to sink the errors
-error_file_name <- paste("errors_",strategy_id,"_",run_id,".txt",sep="")
-msgcon <- file(error_file_name, open = "w")
-sink(msgcon , append = FALSE, type = c("message"), split = FALSE)
 
 # check the general user inputs
 source("codes/generate_inputs/check_general_inputs.R")
