@@ -20,7 +20,7 @@ generate_deterministic_input_shell_tables <- function()
   for (i in 1:(length(time_varying_entering_cohort_cycles)))
   {
     df_tmp <- data.frame(counts)
-    col_names_tmp <- c(paste("proportion_of_new_comers_c",time_varying_entering_cohort_cycles[i],sep=""))
+    col_names_tmp <- c(paste("number_of_new_comers_cycle",time_varying_entering_cohort_cycles[i],sep=""))
     colnames(df_tmp) <- col_names_tmp
     factor_perm <- cbind(factor_perm,df_tmp)
   }
@@ -53,7 +53,7 @@ generate_deterministic_input_shell_tables <- function()
   for (i in 1:(length(time_varying_overdose_cycles)))
   {
     df_tmp <- data.frame(all_types_overdose)
-    col_names_tmp <- c(paste("all_types_overdose_c",time_varying_overdose_cycles[i],sep=""))
+    col_names_tmp <- c(paste("all_types_overdose_cycle",time_varying_overdose_cycles[i],sep=""))
     colnames(df_tmp) <- col_names_tmp
     factor_perm <- cbind(factor_perm,df_tmp)
   }
@@ -62,7 +62,7 @@ generate_deterministic_input_shell_tables <- function()
   col_names_tmp <- matrix(rep("",length(time_varying_overdose_cycles)), nrow=1)
   for (i in 1:(length(col_names_tmp)))
   {
-    col_names_tmp[i] <- paste("fatal_to_all_types_overdose_ratio_c",time_varying_overdose_cycles[i],sep="")
+    col_names_tmp[i] <- paste("fatal_to_all_types_overdose_ratio_cycle",time_varying_overdose_cycles[i],sep="")
   }
   write.table(col_names_tmp,file="inputs/fatal_overdose.csv",row.names = FALSE,quote = FALSE, col.names = FALSE, sep=",")
   #------------------------------------------------------------------------------------------------------------------
@@ -87,16 +87,20 @@ generate_deterministic_input_shell_tables <- function()
   colnames(factor_perm)<-c("initial_block","oud","sex","agegrp")
   factor_perm<-factor_perm[,c("agegrp","sex","oud","initial_block")]
   
-  for (i in 1: (ceiling(imax/2)))
+  for (ii in 1:length(time_varying_blk_trans_cycles))
   {
+    for (i in 1: (ceiling(imax/2)))
+    {
+      df_tmp <- data.frame(values)
+      col_names<-c(paste("to_",block[i],"_cycle",time_varying_blk_trans_cycles[ii],sep=""))
+      colnames(df_tmp)<-col_names
+      factor_perm<-cbind(factor_perm,df_tmp)
+    }
     df_tmp <- data.frame(values)
-    col_names<-c(paste("to_",block[i],sep=""))
-    colnames(df_tmp)<-col_names
-    factor_perm<-data.frame(factor_perm,df_tmp)
+    colnames(df_tmp) <- c(paste("to_corresponding_post_trt_cycle",time_varying_blk_trans_cycles[ii],sep=""))
+    factor_perm<-cbind(factor_perm,df_tmp)
   }
-  df_tmp <- data.frame(values)
-  colnames(df_tmp) <- c("to_corresponding_post_trt")
-  factor_perm<-data.frame(factor_perm,df_tmp)
+
   write.csv(factor_perm,file="inputs/block_trans.csv",row.names = FALSE,quote = FALSE)
   
   # Block inititation effect table
@@ -121,12 +125,12 @@ generate_deterministic_input_shell_tables <- function()
       dir.create("inputs/cost_life")
     }
     # healthcare utilization cost
-    factor_perm<-expand.grid(oud,sex,agegrp) 
-    colnames(factor_perm)<-c("oud","sex","agegrp")
-    factor_perm<-factor_perm[,c("agegrp","sex","oud")]
-    healthcare_utilization_cost <- rep("", total_num_compartments/imax)
+    factor_perm<-expand.grid(oud,sex,agegrp,block) 
+    colnames(factor_perm)<-c("oud","sex","agegrp","block")
+    factor_perm<-factor_perm[,c("block","agegrp","sex","oud")]
+    healthcare_utilization_cost <- rep("", total_num_compartments)
     df <- data.frame(factor_perm)
-    colnames(df) <- c("agegrp","sex","oud")
+    colnames(df) <- c("block","agegrp","sex","oud")
     for (i in 1:length(cost_perspectives))
     {
       df_tmp <- data.frame(healthcare_utilization_cost)
@@ -172,14 +176,29 @@ generate_deterministic_input_shell_tables <- function()
       write.csv(df,file="inputs/cost_life/pharmaceutical_cost.csv",row.names = FALSE,quote = FALSE)
     }
     
-    # utility
-    # factor_perm<-expand.grid(oud,sex,agegrp,block) 
-    # colnames(factor_perm)<-c("oud","sex","agegrp","block")
-    # factor_perm<-factor_perm[,c("block","agegrp","sex","oud")]
-    # utility <- rep("", total_num_compartments)
-    # utility_tbl <- data.frame(factor_perm,utility,utility)
-    # colnames(utility_tbl) <- c("block","agegrp","sex","oud","minimal_utility","multiplicative_utility")
-    # write.csv(utility_tbl,file="inputs/cost_life/utility.csv",row.names = FALSE,quote = FALSE)
+    # backgrournd utility
+     factor_perm<-expand.grid(sex,agegrp) 
+     colnames(factor_perm)<-c("sex","agegrp")
+     factor_perm<-factor_perm[,c("agegrp","sex")]
+     utility <- rep("", jmax*kmax)
+     utility_tbl <- data.frame(factor_perm,utility)
+     colnames(utility_tbl) <- c("agegrp","sex","utility")
+     write.csv(utility_tbl,file="inputs/cost_life/bg_utility.csv",row.names = FALSE,quote = FALSE)
+     
+     # oud/block utility
+     factor_perm<-expand.grid(oud,block) 
+     colnames(factor_perm)<-c("oud","block")
+     factor_perm<-factor_perm[,c("block","oud")]
+     utility <- rep("", imax*lmax)
+     utility_tbl <- data.frame(factor_perm,utility)
+     colnames(utility_tbl) <- c("block","oud","utility")
+     write.csv(utility_tbl,file="inputs/cost_life/oud_utility.csv",row.names = FALSE,quote = FALSE)
+     
+     # setting utility
+     utility <- rep("",imax)
+     utility_tbl <- data.frame(block,utility)
+     colnames(utility_tbl) <- c("block","utility")
+     write.table(utility_tbl,file="inputs/cost_life/setting_utility.csv",row.names = FALSE,quote = FALSE, sep=",")
   }
   
 }

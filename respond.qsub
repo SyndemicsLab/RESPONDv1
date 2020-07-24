@@ -1,6 +1,5 @@
 #!/bin/bash -l
 
-
 # Run this file using 'qsub hep-ce.qsub'
 #
 # All lines starting with "#" are comments
@@ -33,7 +32,7 @@
 # -pe omp 16
 
 # use tasks, comment this line if running on single node.
-#$ -t 1-10
+#$ -t 1-1
 
 # Now let's keep track of some information just in case anything goes wrong
 echo "=========================================================="
@@ -47,8 +46,8 @@ echo "=========================================================="
 
 
 # Load any modules you might want to use.
-module load R/3.5.2
-module load gcc/4.8.1
+module load R/3.5.1
+module load gcc/8.1.0
 
 # Run the commands you need to run for your job
 
@@ -56,7 +55,9 @@ respond_golnaz=/project/hep-ce/golnaz/workspace/respond_golnaz
 cd $respond_golnaz
 
 #for tasks, comment this line if running on single node.
-Rscript codes/respond_main.R $SGE_TASK_ID
+Rscript codes/respond_main.R 1 $SGE_TASK_ID 1
+Rscript codes/respond_main.R 2 $SGE_TASK_ID 1
+Rscript codes/respond_main.R 3 $SGE_TASK_ID 1
 
 echo "=========================================================="
 echo "Finished on : $(date)"
