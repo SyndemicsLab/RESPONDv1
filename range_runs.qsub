@@ -89,26 +89,20 @@ do
 cp $dir/general_stats$idx.csv $respondnb/$dir
 done
 
+# copy input folders, for test only
+#cp -r input* $respondnb/inputs$idx
+#cp -r shared_data $respondnb/inputs$idx
+
+done
+
 # If the error files are not empty, copy it to main directory
-for error in errors*
+for error in *errors*
 do
 file_size=$(stat --format=%s $error)
 if [ $file_size -ne 0 ]
 then
 cp $error $respond
 fi
-done
-
-file_size2=$(stat --format=%s update_files_errors$idx.txt)
-if [ $file_size2 -ne 0 ]
-then
-cp update_files_errors$idx.txt $respond
-fi
-
-# copy input folders, for test only
-#cp -r input* $respondnb/inputs$idx
-#cp -r shared_data $respondnb/inputs$idx
-
 done
 
 echo "=========================================================="

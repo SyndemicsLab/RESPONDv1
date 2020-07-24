@@ -5,6 +5,7 @@
 # No need to set working directory if used as a project.
 # all codes and inputs should be inside this folder in their specific format, name and path.
 #setwd("~/workspace/RESPOND")
+# If running on in terminal, make sure you do not have any setwd() inside this code!
 
 # Install required packages or load the libraries.
 if("Rcpp" %in% rownames(installed.packages()) == FALSE) 
