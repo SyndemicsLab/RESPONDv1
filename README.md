@@ -16,7 +16,7 @@ The recommended method of downloading the source code is through `git` because i
 
 Find your way to your terminal if you are on MacOS or Linux or open the `git` executable if you are on Windows. In this environment, you will enter the following command (also able to be copied via the "Clone" button near the top of the repository page).
 
-```
+```sh
 git clone https://bitbucket.org/respond_projects/respond.git
 ```
 After doing this, a prompt will appear requesting you enter your Bitbucket username. Another prompt will subsequently request your password (NOTE: Bitbucket's system now requires you [register for an app password they provide you](https://bitbucket.org/account/settings/app-passwords/) in order to successfully retrieve files from the repository.
@@ -35,23 +35,44 @@ While the code "intelligently" handles installing the packages you need in order
 
 #### MacOS and Linux
 Open a terminal and navigate to the folder where you have your source code--if you're unfamiliar, this is done with the `cd` (**c**hange **d**irectory) command, e.g.
-```
+```sh
 cd $HOME/respond
 ```
 if the `$HOME` (on Linux, this is generally `/home/<username>/`. On MacOS, this is `/Users/<username>/`) directory is where you cloned the code.
 
 Here, you will need to create a `.Rprofile` file. From the terminal, this may be done with the `touch` command, i.e.
-```
+```sh
 touch .Rprofile
 ```
 
 Once this file has been created, the line necessary to define where the necessary packages will be stored is
-```
+```R
 .libPaths("/path/to/store/packages")
 ```
-where, of course, you replace `/path/to/store/packages` with the absolute path to the folder you want to keep them, e.g. `/home/user/rpackages` if you were a Linux user whose username is `user` and the place you wanted to store your packages was a folder called `rpackages`.
+where, of course, you replace `/path/to/store/packages` with the absolute path to the folder you want to keep them, e.g. `/home/user/rpackages` if you were a Linux user whose username is `user` and the place you wanted to store your packages was a folder called `rpackages`. If you haven't yet decided on a text editor, this may be done purely from the terminal using the following command:
+```sh
+echo '.libPaths("/path/to/store/packages")' >> .Rprofile
+```
 
 #### Windows
-This section is a stub.
+On Windows, Rstudio, mentioned [above](#necessary-and-recommended-software), installs packages without any additional configuration.
+
+If not using Rstudio, configuration can be done in almost the same way as on MacOS and Linux--a variable named `.libPaths` must be set in your `.Rprofile` file in the working directory (a.k.a. the project directory, wherever you have the repository stored). If no `.Rprofile` file exists in this folder, create it and add the line
+```R
+.libPaths("/path/to/store/packages")
+```
+via whatever text editor you're using.
 
 ### Running the Simulation
+This section is tentative to change, as there is intent to lower the level of complexity of running the simulation.
+
+*Quoted from Golnaz' `run_instructions.docx`:*
+
+* Create a folder called `inputs` in the root directory of RESPOND, copying `user_inputs.R` from `input1` into `inputs` and update the parameters in the new copy of `user_inputs.R` based on your needs.
+* Run `codes/generate_shell_tables.R` to create the `.csv` files you'll need.
+* If there were no errors, there will now be tables in the `inputs` folder. If there were errors, there will be details in the `generate_deterministic_shell_tables_errors.txt` in the top-level RESPOND folder. Add values as is appropriate for your study in these new tables.
+* Actually running the simulation is done from the top-level folder of the project using the command
+```sh
+Rscript codes/respond_main.R X Y
+```
+where `X` is the number on the input folder to be used and `Y` is the number of the current run, used in the case where you're running several iterations of the simulation.
