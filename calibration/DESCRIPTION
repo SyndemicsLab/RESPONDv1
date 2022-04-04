@@ -1,0 +1,12 @@
+Package: calibration
+Title: Empirical Calibration
+Version: 1.0
+Authors@R:
+	person(given = "Dimitri",
+	       family = "Baptiste",
+	       role = c("aut", "cre"),
+	       email = "dimitri.baptiste@bmc.org")
+Description: Incorporates the empirical calibration into the base case of the RESPOND model.
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2

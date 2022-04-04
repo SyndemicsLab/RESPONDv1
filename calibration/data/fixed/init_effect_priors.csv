@@ -1,0 +1,9 @@
+block,distribution,param1,param2
+Buprenorphine,norm,0.256505576,0
+Naltrexone,norm,0.102857143,0
+Methadone,norm,0.432509506,0
+Detox,beta,0,1
+Post-Buprenorphine,unif,0,1
+Post-Naltrexone,unif,0,1
+Post-Methadone,unif,0,1
+Post-Detox,unif,0,1
