@@ -1,0 +1,17 @@
+2022-03-31 Dimitri Baptiste <dimitri.baptiste@bmc.org>
+
+	Previously intended to be included after the major re-write of the RESPOND model,
+	the empirical calibration (EC) provides scripts and data to construct input tables
+	for the RESPOND model based on PHD data from 2013-2015. This implementation
+	serves to replace the manually calibrated base case used in the Detox project.
+
+	Calibration:
+	* calibration/: This folder stores scripts and data relevant to the calibration
+	work done by the group (specifically Anusha Madushani and Jianing Wang).
+	* calibration/R: Contains the relevant R code for calibration input generation.
+	* calibration/R/ec_base.R: Populates tables in an `inputX` folder where `X` is
+	a user-defined value provided via the command line at runtime.
+	* calibration/data: contains the source tables used by the calibration team to
+	create the data tables the model uses. `ec_parameters.csv` is the table of
+	raw calibration parameters, while all tables in `fixed` are the raw datasets
+	before they are filtered and/or processed as necessary for RESPOND input use.

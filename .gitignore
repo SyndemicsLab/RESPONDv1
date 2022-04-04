@@ -2,6 +2,13 @@
 .Rhistory
 .RData
 .Ruserdata
+.Rprofile
 output*/
 inputs/
 *.Rproj
+
+# a file used for testing use of other scripts
+tmp.R
+
+# output for the empirical calibration seed
+ec_seed

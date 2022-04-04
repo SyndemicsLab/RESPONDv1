@@ -64,7 +64,7 @@ If not using Rstudio, configuration can be done in almost the same way as on Mac
 via whatever text editor you're using.
 
 ### Running the Simulation
-This section is tentative to change, as there is intent to lower the level of complexity of running the simulation.
+**Note:** This section is tentative to change, as there is intent to lower the level of complexity of running the simulation.
 
 *Quoted from Golnaz' `run_instructions.docx`:*
 
@@ -76,3 +76,17 @@ This section is tentative to change, as there is intent to lower the level of co
 Rscript codes/respond_main.R X Y
 ```
 where `X` is the number on the input folder to be used and `Y` is the number of the current run, used in the case where you're running several iterations of the simulation.
+
+### Using the Empirical Calibration (EC)
+This process renders generating shell tables in the above unnecessary, as your base dataset is replaced with what is generated here.
+
+The folder `calibration` contains R code relevant to generating a base case of inputs for to use with RESPOND. **There is no base case for cost inputs, however. Those will need to be supplied manually.** To use the calibration generation code, you will enter the RESPOND working directory and run the command
+```sh
+Rscript calibration/R/ec_base.R <suffix of inputX folder>
+```
+
+Keep in mind that the current implementation of RESPOND requires that the input folder name is numeric in the place of the `X`, though this will change with a future update.
+
+#### EC Outputs
+
+In addition to the `inputX` folder, `ec_base.R` also generates a file called `ec_seed`, which stores the "seed" (in this case the row of the source folder) that corresponds to the generated data used for the run, in case a user needs to reference or verify a previous set of results. The time of the generation of data as well as the name of the resultant folder is included for convenience.
