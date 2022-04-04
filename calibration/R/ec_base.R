@@ -416,12 +416,12 @@ dir.create(in_name, showWarnings = FALSE)
 copied                <- file.copy(from = file.path(static_table_dir, list.files(static_table_dir)), to = in_name, recursive = TRUE)
 
 ## GENERATED TABLES
-write.table(entering_cohort, file = paste0(in_name, "/entering_cohort.csv"), quote = FALSE, row.names = FALSE)
-write.table(init_effect, file = paste0(in_name, "/block_init_effect.csv"), quote = FALSE, row.names = FALSE)
-write.table(state_transition, file = paste0(in_name, "/oud_trans.csv"), quote = FALSE, row.names = FALSE)
-write.table(block_transition, file = paste0(in_name, "/block_trans.csv"), quote = FALSE, row.names = FALSE)
-write.table(stratified_overdoses, file = paste0(in_name, "/all_types_overdose.csv"), quote = FALSE, row.names = FALSE)
-write.table(fatal_overdose, file = paste0(in_name, "/fatal_overdose.csv"), quote = FALSE, row.names = FALSE)
+write.table(entering_cohort, file = paste0(in_name, "/entering_cohort.csv"), quote = FALSE, row.names = FALSE, sep = ',')
+write.table(init_effect, file = paste0(in_name, "/block_init_effect.csv"), quote = FALSE, row.names = FALSE, sep = ',')
+write.table(state_transition, file = paste0(in_name, "/oud_trans.csv"), quote = FALSE, row.names = FALSE, sep = ',')
+write.table(block_transition, file = paste0(in_name, "/block_trans.csv"), quote = FALSE, row.names = FALSE, sep = ',')
+write.table(stratified_overdoses, file = paste0(in_name, "/all_types_overdose.csv"), quote = FALSE, row.names = FALSE, sep = ',')
+write.table(fatal_overdose, file = paste0(in_name, "/fatal_overdose.csv"), quote = FALSE, row.names = FALSE, sep = ',')
 
 ## write the seed out to a file so analysts can keep track of which rows of calibration data were used for which runs
 seed_out              <- paste0("[", Sys.time(), "] SEED: ", format(chosen_set_num, width = 4), "; GENERATED FOLDER: ", in_name)
