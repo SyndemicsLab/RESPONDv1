@@ -157,13 +157,22 @@ for (i in 1:length(raw_state_transition[,1])) {
     probability <- cal_to_dist(as.character(dat["distribution"]),
                                as.numeric(dat["param1"]),
                                as.numeric(dat["param2"]))
-    if (inject == "_Injection") {
-      tmp_state_transition[row + j, 6] <- probability
-      tmp_state_transition[row + j, 8] <- 1 - probability
+    ## active states flip the indices
+    if (dat[4] == "Active") {
+      m <- 7
+      n <- 5
     }
     else {
-      tmp_state_transition[row + j, 5] <- probability
-      tmp_state_transition[row + j, 7] <- 1 - probability
+      m <- 5
+      n <- 7
+    }
+    if (inject == "_Injection") {
+      tmp_state_transition[row + j, m + 1] <- probability
+      tmp_state_transition[row + j, n + 1] <- 1 - probability
+    }
+    else {
+      tmp_state_transition[row + j, m] <- probability
+      tmp_state_transition[row + j, n] <- 1 - probability
     }
   }
 }
