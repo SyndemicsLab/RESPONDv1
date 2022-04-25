@@ -1,6 +1,3 @@
-## used to fill in the folder name for input files below
-strategy_id <- 1
-
 infile <- function(s_id, filename) {
     ## a convenience function used to simplify the filename substitution below
     ## when the folder follows the format "inputX", where X is the strategy id

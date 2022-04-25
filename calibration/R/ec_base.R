@@ -106,21 +106,21 @@ colnames(tmp_state_transition) <- c("block", "agegrp", "sex", "initial_status", 
 
 ## add in the base, calibrated, no-treatment block
 for (i in seq(1, length(cal_state_transition)/2, 2)) {
-  row <- length(tmp_state_transition[,1])
-  states <- c(cal_state_transition[i], cal_state_transition[i+1])
-  to_states <- character()
+  row           <- length(tmp_state_transition[,1])
+  states        <- c(cal_state_transition[i], cal_state_transition[i+1])
+  to_states     <- character()
   for (state in names(states)) {
-    curr <- unlist(strsplit(state, '\\.'))
-    to_states <- c(to_states, curr[5])
+    curr        <- unlist(strsplit(state, '\\.'))
+    to_states   <- c(to_states, curr[5])
   }
   initial_state <- gsub("from_", "", curr[4])
-  age <- curr[3]
-  block <- curr[2]
+  age           <- curr[3]
+  block         <- curr[2]
 
   ## determine the third nonzero column - one column is always zero due
   ## to the design of transitions in the model
-  states <- c(states, 1 - sum(as.numeric(states)))
-  to_states <- c(to_states, oud_state_col(initial_state, to_states))
+  states        <- c(states, 1 - sum(as.numeric(states)))
+  to_states     <- c(to_states, oud_state_col(initial_state, to_states))
 
   for (j in 1:2) {
     ## allocate an empty row to store the current values
@@ -153,11 +153,13 @@ for (i in 1:length(raw_state_transition[,1])) {
     tmp_state_transition[row + j,3]    <- dat[3]
     tmp_state_transition[row + j,4]    <- paste0(dat[4], inject)
     tmp_state_transition[row + j, 5:8] <- "0"
+
     ## the calibration value for the given state - Active or Nonactive
     probability <- cal_to_dist(as.character(dat["distribution"]),
                                as.numeric(dat["param1"]),
                                as.numeric(dat["param2"]))
-    ## active states flip the indices
+
+    ## active states flip the column indices
     if (dat[4] == "Active") {
       m <- 7
       n <- 5
@@ -202,20 +204,20 @@ for (grp in ages) {
 treatments <- c(levels(factor(raw_state_transition$block)), "Detox")
 for (treatment in treatments) {
   for (i in seq(length(cal_state_transition)/2+1, length(cal_state_transition), 2)) {
-    row <- length(tmp_state_transition[,1])
-    states <- c(cal_state_transition[i], cal_state_transition[i+1])
-    to_states <- character()
+    row         <- length(tmp_state_transition[,1])
+    states      <- c(cal_state_transition[i], cal_state_transition[i+1])
+    to_states   <- character()
     for (state in names(states)) {
-      curr <- unlist(strsplit(state, '\\.'))
+      curr      <- unlist(strsplit(state, '\\.'))
       to_states <- c(to_states, curr[5])
     }
     initial_state <- gsub("from_", "", curr[4])
-    age <- curr[3]
-    block <- paste0("Post-", treatment)
+    age         <- curr[3]
+    block       <- paste0("Post-", treatment)
 
     ## determine the third nonzero column
-    states <- c(states, 1 - sum(as.numeric(states)))
-    to_states <- c(to_states, oud_state_col(initial_state, to_states))
+    states      <- c(states, 1 - sum(as.numeric(states)))
+    to_states   <- c(to_states, oud_state_col(initial_state, to_states))
 
     for (j in 1:2) {
       ## allocate an empty row to store the current values
@@ -232,11 +234,11 @@ for (treatment in treatments) {
   }
 }
 
-state_transition <- age_correction(tmp_state_transition, age_bin_width)
+state_transition      <- age_correction(tmp_state_transition, age_bin_width)
 
 ## sort the state transition table to match the expected format for RESPOND input
 ## reference the output of `generate_shell_tables.R` when using the provided `user_inputs.R`
-state_transition <- state_transition %>%
+state_transition      <- state_transition %>%
   arrange(factor(block, levels = c("No_Treatment", "Buprenorphine", "Naltrexone", "Methadone", "Detox", "Post-Buprenorphine", "Post-Naltrexone", "Post-Methadone", "Post-Detox")),
           agegrp, desc(sex), factor(initial_status, levels = c("Active_Noninjection", "Active_Injection", "Nonactive_Noninjection", "Nonactive_Injection")))
 
@@ -341,7 +343,7 @@ while (raw_index < length(raw_block_transition[,1])) {
   raw_index   <- raw_index + grp + 1
 }
 
-block_transition <- age_correction(tmp_block_transition, age_bin_width)
+block_transition      <- age_correction(tmp_block_transition, age_bin_width)
 
 block_transition      <- block_transition %>%
   arrange(agegrp, desc(sex), factor(oud, levels = c("Active_Noninjection", "Active_Injection", "Nonactive_Noninjection", "Nonactive_Injection")),
@@ -372,32 +374,32 @@ reference             <- stratified_overdoses
 
 ## regular treatments
 for (i in 2:(length(od_multipliers)-1)) {
-  tmp <- reference
-  treatment <- unlist(strsplit(names(od_multipliers[i]), "\\."))[2]
-  tmp[,1] <- rep(treatment, 20)
+  tmp                  <- reference
+  treatment            <- unlist(strsplit(names(od_multipliers[i]), "\\."))[2]
+  tmp[,1]              <- rep(treatment, 20)
   for (j in 5:length(colnames(reference))) {
-    tmp[,j] <- tmp[,j] * od_multipliers[1,i]
+    tmp[,j]            <- tmp[,j] * od_multipliers[1,i]
   }
   stratified_overdoses <- rbind(stratified_overdoses, tmp)
 }
 
 ## detox
 ## added separately because calibration
-tmp <- reference
-treatment <- "Detox"
-tmp[,1] <- rep(treatment, 20)
+tmp                   <- reference
+treatment             <- "Detox"
+tmp[,1]               <- rep(treatment, 20)
 for (j in 5:length(colnames(reference))) {
-  tmp[,j] <- rep(0, 20)
+  tmp[,j]             <- rep(0, 20)
 }
-stratified_overdoses <- rbind(stratified_overdoses, tmp)
+stratified_overdoses  <- rbind(stratified_overdoses, tmp)
 
 ## post-treatments
 for (i in treatments) {
-  tmp <- reference
-  treatment <- paste0("Post-", i)
-  tmp[,1] <- rep(treatment, 20)
+  tmp                  <- reference
+  treatment            <- paste0("Post-", i)
+  tmp[,1]              <- rep(treatment, 20)
   for (j in 5:length(colnames(reference))) {
-    tmp[,j] <- tmp[,j] * od_multipliers[1,length(od_multipliers)]
+    tmp[,j]            <- tmp[,j] * od_multipliers[1,length(od_multipliers)]
   }
   stratified_overdoses <- rbind(stratified_overdoses, tmp)
 }
@@ -431,6 +433,8 @@ write.table(state_transition, file = paste0(in_name, "/oud_trans.csv"), quote = 
 write.table(block_transition, file = paste0(in_name, "/block_trans.csv"), quote = FALSE, row.names = FALSE, sep = ',')
 write.table(stratified_overdoses, file = paste0(in_name, "/all_types_overdose.csv"), quote = FALSE, row.names = FALSE, sep = ',')
 write.table(fatal_overdose, file = paste0(in_name, "/fatal_overdose.csv"), quote = FALSE, row.names = FALSE, sep = ',')
+
+write(paste0("strategy_id <- ", arguments[1]), file = paste0(in_name, "/user_inputs.R"), append = TRUE)
 
 ## write the seed out to a file so analysts can keep track of which rows of calibration data were used for which runs
 seed_out              <- paste0("[", Sys.time(), "] SEED: ", format(chosen_set_num, width = 4), "; GENERATED FOLDER: ", in_name)
