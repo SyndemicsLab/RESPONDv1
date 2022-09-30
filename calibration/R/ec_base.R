@@ -20,6 +20,7 @@ source("./calibration/R/utility.R")
 arguments             <- commandArgs(trailingOnly = TRUE)
 ## the resultant RESPOND input folder name
 in_name               <- paste0("input", arguments[1])
+user_seed             <- as.numeric(arguments[2])
 
 ### input files
 ## read in the calibration parameter dataset
@@ -33,13 +34,17 @@ raw_block_transition  <- read_params("./calibration/data/fixed/block_trans_prior
 raw_overdose          <- read_params("./calibration/data/fixed/all_types_overdose_priors.csv")
 
 ## define the size of each age bin
+## in the future, comparing the bin size to `user_inputs.R` may be the best approach here.
+## OR for age bin width to be defined alongside an age range; i.e. bin_width = 5, age_range = (10, 99)
 age_bin_width         <- 5
 
 ### choosing a set of calibrated parameters
 ## each row of the calibration parameters is one valid run dataset, number of rows is
 ## choose a set (row) of parameters from the calibration parameter sets
 ## storing this so users know what data they used if they need to redo a run
-chosen_set_num        <- sample(1:length(calibrated_parameters[,1]), size = 1)
+##
+## the user may also supply a specific row they'd like to use
+chosen_set_num        <- ifelse(is.na(user_seed), sample(1:length(calibrated_parameters[,1]), size = 1), user_seed)
 chosen_set            <- calibrated_parameters[chosen_set_num,]
 
 ### constructing input tables
@@ -434,7 +439,8 @@ write.table(block_transition, file = paste0(in_name, "/block_trans.csv"), quote 
 write.table(stratified_overdoses, file = paste0(in_name, "/all_types_overdose.csv"), quote = FALSE, row.names = FALSE, sep = ',')
 write.table(fatal_overdose, file = paste0(in_name, "/fatal_overdose.csv"), quote = FALSE, row.names = FALSE, sep = ',')
 
-write(paste0("strategy_id <- ", arguments[1]), file = paste0(in_name, "/user_inputs.R"), append = TRUE)
+## adjusting which input folder to reference for `input_file_paths.R`
+write(paste0("strategy_id <<- ", arguments[1]), file = paste0(in_name, "/user_inputs.R"), append = TRUE)
 
 ## write the seed out to a file so analysts can keep track of which rows of calibration data were used for which runs
 seed_out              <- paste0("[", Sys.time(), "] SEED: ", format(chosen_set_num, width = 4), "; GENERATED FOLDER: ", in_name)
