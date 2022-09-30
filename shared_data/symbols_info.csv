@@ -1,3 +1,0 @@
-input_filename,shared_status,symbols,symbol_ranges
-block_trans.csv,no,A#B,"1,1.2,0.1#0.4,1,0.2"
-fatal_overdose.csv,yes,C,"1,2,1"
