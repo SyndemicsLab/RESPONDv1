@@ -29,9 +29,9 @@ In the additional menu options denoted by three dots on the repository page, the
 
 Once you've obtained the source code through one of the above methods, you'll need to configure some things before you can actually run the code.
 
-### Required Packages
+### Required R Packages
 
-While the code "intelligently" handles installing the packages you need in order to run it, the location they get stored on your device may need to be manually specified (it depends on your settings and personal preference), to avoid needing to give the program administrative permissions unnecessarily. Configuration for this differs based on your platform--follow the instructions for the system you'll be using to run the simulations.
+While the code "intelligently" handles installing the packages you need in order to run it, the location they get stored on your device may need to be manually specified (it depends on your settings and personal preference), to avoid needing to give the program administrative permissions unnecessarily. Configuration for this differs based on your platform--follow the instructions for the system you'll be using to run your simulations.
 
 #### MacOS and Linux
 Open a terminal and navigate to the folder where you have your source code--if you're unfamiliar, this is done with the `cd` (**c**hange **d**irectory) command, e.g.
@@ -69,23 +69,25 @@ via whatever text editor you're using.
 *Quoted from Golnaz' `run_instructions.docx`:*
 
 * Create a folder called `inputs` in the root directory of RESPOND, copying `user_inputs.R` from `input1` into `inputs` and update the parameters in the new copy of `user_inputs.R` based on your needs.
-* Run `codes/generate_shell_tables.R` to create the `.csv` files you'll need.
+* Run `src/generate_shell_tables.R` to create the `.csv` files you'll need.
 * If there were no errors, there will now be tables in the `inputs` folder. If there were errors, there will be details in the `generate_deterministic_shell_tables_errors.txt` in the top-level RESPOND folder. Add values as is appropriate for your study in these new tables.
 * Actually running the simulation is done from the top-level folder of the project using the command
 ```sh
-Rscript codes/respond_main.R X Y
+Rscript src/respond_main.R X Y
 ```
 where `X` is the number on the input folder to be used and `Y` is the number of the current run, used in the case where you're running several iterations of the simulation.
 
 ### Using the Empirical Calibration (EC)
 This process renders generating shell tables in the above unnecessary, as your base dataset is replaced with what is generated here.
 
-The folder `calibration` contains R code relevant to generating a base case of inputs for to use with RESPOND. **There is no base case for cost inputs, however. Those will need to be supplied manually.** To use the calibration generation code, you will enter the RESPOND working directory and run the command
+The folder `calibration` contains R code relevant to generating a base case of inputs for to use with RESPOND. **Note: There is no calibrated base case for cost inputs--the values in the `cost_life` directory of generated EC inputs are taken directly from the previous, "manually calibrated", base case.**
+
+The syntax used to run the calibration generation code is as follows, and requires being run from within the top-level RESPOND directory:
 ```sh
-Rscript calibration/R/ec_base.R <suffix of inputX folder>
+Rscript calibration/R/ec_base.R <suffix of inputX folder> [optional: user seed]
 ```
 
-Keep in mind that the current implementation of RESPOND requires that the input folder name is numeric in the place of the `X`, though this will change with a future update.
+Keep in mind that the current implementation of RESPOND requires that the input folder name is of the form `inputX`, where `X` is required to be numeric, though this will change with a future update.
 
 #### EC Outputs
 
