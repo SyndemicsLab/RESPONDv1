@@ -8,7 +8,7 @@ row_id <- as.numeric(args[1])
 msgcon <- file(paste("update_files_errors",row_id,".txt",sep=""), open = "w")
 sink(msgcon , append = FALSE, type = c("message"), split = FALSE)
      
-source("codes/generate_inputs/update_files_funcs.R")
+source("src/generate_inputs/update_files_funcs.R")
 symbol_info <- read.csv("./shared_data/symbols_info.csv")
 multipliers <- as.matrix(read.csv("./shared_data/symbol_tbl.csv"))[row_id,]
 # --------------------------------------------------------------------------------------------------------------------
