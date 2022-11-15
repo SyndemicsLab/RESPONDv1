@@ -3,7 +3,7 @@
 
 # Set your current working directory here, if required.
 # No need to set working directory if used as a project.
-# all codes and inputs should be inside this folder in their specific format, name and path.
+# all src and inputs should be inside this folder in their specific format, name and path.
 #setwd("~/workspace/RESPOND")
 # If running on in terminal, make sure you do not have any setwd() inside this code!
 
@@ -36,20 +36,20 @@ source(paste("input",strategy_id,"/input_file_paths.R", sep=""))
 source(paste("input",strategy_id,"/user_inputs.R", sep=""))
 
 # check the general user inputs
-source("codes/generate_inputs/check_general_inputs.R")
+source("src/generate_inputs/check_general_inputs.R")
 check_general_inputs()
 
 # load deterministic inputs
-source("codes/generate_inputs/load_inputs.R")
+source("src/generate_inputs/load_inputs.R")
 load_inputs()
 
 # check final inputs of the simulation
-source("codes/generate_inputs/check_load_or_generated_inputs.R")
+source("src/generate_inputs/check_load_or_generated_inputs.R")
 check_load_gen_inputs()
 
 # source files
-sourceCpp("codes/simulation.cpp")
-source("codes/generate_outputs/generate_output_IDs.R")
+sourceCpp("src/simulation.cpp")
+source("src/generate_outputs/generate_output_IDs.R")
 generate_output_IDs()
 
 if (file.size(error_file_name) != 0)
@@ -88,18 +88,18 @@ if (print_general_outputs == "yes")
 
 if (cost_analysis == "yes")
 {
-  source("codes/generate_outputs/print_costs.R")
+  source("src/generate_outputs/print_costs.R")
   print_costs()
 }
 
 if (print_per_blk_output == "yes")
 {
-  source("codes/generate_outputs/print_outputs_per_block.R")
+  source("src/generate_outputs/print_outputs_per_block.R")
   print_outputs_per_block()
 }
 
 if (length(general_stats_cycles) != 0)
 {
-  source("codes/generate_outputs/get_general_stats.R")
+  source("src/generate_outputs/get_general_stats.R")
   get_general_stats_in_cycle(general_stats_cycles)
 }
