@@ -6,7 +6,7 @@
 
 Strictly, the only required software required to run this simulation is the [R programming language](https://www.r-project.org/). R is freely available and is open-source. [This mirror from Carnegie Mellon University](http://lib.stat.cmu.edu/R/CRAN/) contains a copy of the Comprehensive R Archive Network (CRAN), with individualized links depending on the operating system you use. If you are using Linux, it is recommended that you first check your built-in package manager, as it is likely that a version of R already exists there.
 
-While R is the only required software, it is recommended that users also download [`git`](https://git-scm.com/downloads), for [version control](https://www.atlassian.com/git/tutorials/what-is-version-control), as well as a programming-oriented text editor (e.g. [emacs](https://www.gnu.org/software/emacs/) or [vim](https://www.vim.org)) or an integrated development environment (IDE) such as [Rstudio](https://www.rstudio.com), as changes will need to be made to some files to study the specific situations of interest to you.
+While R is the only required software, it is recommended that users also download [`git`](https://git-scm.com/downloads), for [version control](https://www.atlassian.com/git/tutorials/what-is-version-control), as well as a programming-oriented text editor (e.g. [emacs](https://www.gnu.org/software/emacs/) or [vim](https://www.vim.org)) or an integrated development environment (IDE) such as [RStudio](https://www.rstudio.com), as changes will need to be made to some files to study the specific situations of interest to you.
 
 ## Obtaining the Source Code
 
@@ -55,9 +55,9 @@ echo '.libPaths("/path/to/store/packages")' >> .Rprofile
 ```
 
 #### Windows
-On Windows, Rstudio, mentioned [above](#necessary-and-recommended-software), installs packages without any additional configuration.
+On Windows, **RStudio**, mentioned [above](#necessary-and-recommended-software), installs packages without any additional configuration.
 
-If not using Rstudio, configuration can be done in almost the same way as on MacOS and Linux--a variable named `.libPaths` must be set in your `.Rprofile` file in the working directory (a.k.a. the project directory, wherever you have the repository stored). If no `.Rprofile` file exists in this folder, create it and add the line
+If not using RStudio, configuration can be done in almost the same way as on MacOS and Linux--a variable named `.libPaths` must be set in your `.Rprofile` file in the working directory (a.k.a. the project directory, wherever you have the repository stored). If no `.Rprofile` file exists in this folder, create it and add the line
 ```R
 .libPaths("/path/to/store/packages")
 ```
@@ -80,7 +80,9 @@ where `X` is the number on the input folder to be used and `Y` is the number of 
 ### Using the Empirical Calibration (EC)
 This process renders generating shell tables in the above unnecessary, as your base dataset is replaced with what is generated here.
 
-The folder `calibration` contains R code relevant to generating a base case of inputs for to use with RESPOND. **Note: There is no calibrated base case for cost inputs--the values in the `cost_life` directory of generated EC inputs are taken directly from the previous, "manually calibrated", base case.**
+The folder `calibration` contains R code relevant to generating a base case of inputs for to use with RESPOND.
+
+**Note: There is no calibrated base case for cost inputs--the values in the `cost_life` directory of generated EC inputs are taken directly from the previous, "manually calibrated", base case.**
 
 The syntax used to run the calibration generation code is as follows, and requires being run from within the top-level RESPOND directory:
 ```sh

@@ -45,6 +45,16 @@ age_bin_width         <- 5
 ##
 ## the user may also supply a specific row they'd like to use
 chosen_set_num        <- ifelse(is.na(user_seed), sample(1:length(calibrated_parameters[,1]), size = 1), user_seed)
+## if the row was used in a previous run, re-roll until it is a previously-unused row
+## this is ignored if the user requests to run a seed previously run
+if (file.exists(".ec_used")) {
+  used_set              <- readRDS(".ec_used")
+}
+if (is.na(user_seed) & exists("used_set")) {
+  while (chosen_set_num %in% used_set) {
+    chosen_set_num    <- sample(1:length(calibrated_parameters[,1]), size = 1)
+  }
+}
 chosen_set            <- calibrated_parameters[chosen_set_num,]
 
 ### constructing input tables
@@ -445,3 +455,13 @@ write(paste0("strategy_id <<- ", arguments[1]), file = paste0(in_name, "/user_in
 ## write the seed out to a file so analysts can keep track of which rows of calibration data were used for which runs
 seed_out              <- paste0("[", Sys.time(), "] SEED: ", format(chosen_set_num, width = 4), "; GENERATED FOLDER: ", in_name)
 write(seed_out, file = "ec_seed", append = TRUE)
+## add the set generated to the set of previously-used rows, if the user didn't supply the seed
+if (is.na(user_seed)) {
+  if (exists("used_set")) {
+    used_set          <- c(used_set, chosen_set_num)
+  }
+  else {
+    used_set          <- c(chosen_set_num)
+  }
+  saveRDS(used_set, file = ".ec_used")
+}

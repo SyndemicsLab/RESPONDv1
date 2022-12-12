@@ -12,6 +12,7 @@ tmp.R
 
 # output for the empirical calibration seed
 ec_seed
+.ec_used
 
 # analyst input folders
 input*/
