@@ -76,21 +76,3 @@ via whatever text editor you're using.
 Rscript src/respond_main.R X Y
 ```
 where `X` is the number on the input folder to be used and `Y` is the number of the current run, used in the case where you're running several iterations of the simulation.
-
-### Using the Empirical Calibration (EC)
-This process renders generating shell tables in the above unnecessary, as your base dataset is replaced with what is generated here.
-
-The folder `calibration` contains R code relevant to generating a base case of inputs for to use with RESPOND.
-
-**Note: There is no calibrated base case for cost inputs--the values in the `cost_life` directory of generated EC inputs are taken directly from the previous, "manually calibrated", base case.**
-
-The syntax used to run the calibration generation code is as follows, and requires being run from within the top-level RESPOND directory:
-```sh
-Rscript calibration/R/ec_base.R <suffix of inputX folder> [optional: user seed]
-```
-
-Keep in mind that the current implementation of RESPOND requires that the input folder name is of the form `inputX`, where `X` is required to be numeric, though this will change with a future update.
-
-#### EC Outputs
-
-In addition to the `inputX` folder, `ec_base.R` also generates a file called `ec_seed`, which stores the "seed" (in this case the row of the source folder) that corresponds to the generated data used for the run, in case a user needs to reference or verify a previous set of results. The time of the generation of data as well as the name of the resultant folder is included for convenience.
